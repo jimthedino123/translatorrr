@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SecretLang Translator</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body { font-family: system-ui, Arial; max-width:720px; margin:20px auto; padding:0 12px; }
+    input { padding:8px; width:60%; margin-right:6px; }
+    button { padding:8px 10px; }
+    .small { font-size:0.9rem; color:#444; margin-top:8px; }
+    #result { margin-top:12px; white-space:pre-wrap; }
+    #addForm { margin-top:12px; }
+  </style>
+</head>
+<body>
+  <h2>SecretLang Translator</h2>
+  <p class="small">Type an English or Secret word and press Translate. Add new words with "Add word".</p>
+
+  <input id="inputWord" placeholder="Type English or Secret word">
+  <button id="translateBtn">Translate</button>
+  <button id="showAdd">Add word</button>
+
+  <div id="result"></div>
+
+  <div id="addForm" style="display:none">
+    <h4>Add a new word</h4>
+    <input id="eng" placeholder="English word">
+    <input id="sec" placeholder="Secret word">
+    <button id="saveBtn">Save</button>
+  </div>
+
+<script>
+(function(){
+  let dict = {};
+  let rev = {};
+
+  // fetch external JSON dictionary
+  fetch('dictionary.json')
+    .then(resp => resp.json())
+    .then(data => {
+      dict = data;
+      buildReverse();
+    })
+    .catch(err => console.error("Failed to load dictionary:", err));
+
+  function buildReverse() {
+    rev = {};
+    for (const k of Object.keys(dict)) rev[dict[k].toLowerCase()] = k;
+  }
+
+  function save() {
+    localStorage.setItem('secretDict_v1', JSON.stringify(dict));
+    buildReverse();
+  }
+
+  function translateWord(w) {
+    const s = (w||"").trim().toLowerCase();
+    if(!s) return "Type a word to translate.";
+    if(dict[s]) return s + " → " + dict[s];
+    if(rev[s]) return s + " → " + rev[s];
+    // substring matches
+    const engMatches = Object.keys(dict).filter(k => k.includes(s));
+    const secMatches = Object.keys(rev).filter(k => k.includes(s));
+    let out = "";
+    if(engMatches.length) out += "English matches:\n" + engMatches.map(k => k + " → " + dict[k]).join("\n");
+    if(secMatches.length) out += (out ? "\n\n" : "") + "Secret matches:\n" + secMatches.map(k => k + " → " + rev[k]).join("\n");
+    if(!out) out = "No match found. You can add the word with 'Add word'.";
+    return out;
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const input = document.getElementById('inputWord');
+    const result = document.getElementById('result');
+
+    document.getElementById('translateBtn').addEventListener('click', ()=>{
+      result.textContent = translateWord(input.value);
+    });
+
+    document.getElementById('showAdd').addEventListener('click', ()=>{
+      const form = document.getElementById('addForm');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', ()=>{
+      const e = document.getElementById('eng').value.trim().toLowerCase();
+      const s = document.getElementById('sec').value.trim();
+      if(!e || !s){ alert('Fill both English and Secret'); return; }
+      dict[e] = s;
+      save();
+      document.getElementById('eng').value = '';
+      document.getElementById('sec').value = '';
+      document.getElementById('addForm').style.display = 'none';
+      result.textContent = 'Saved: ' + e + ' → ' + s;
+    });
+
+    // allow Enter key in input to translate
+    input.addEventListener('keydown', (ev) => {
+      if(ev.key === 'Enter') document.getElementById('translateBtn').click();
+    });
+
+    // load saved words from localStorage if any
+    const savedDict = localStorage.getItem('secretDict_v1');
+    if(savedDict) {
+      dict = JSON.parse(savedDict);
+      buildReverse();
+    }
+  });
+})();
+</script>
+</body>
+</html>
