@@ -11,13 +11,13 @@
 “icons”: [
 {
 “src”: “IMG_7422.png”,
-“sizes”: “192x192”,
+“sizes”: “400x400”,
 “type”: “image/png”,
 “purpose”: “any maskable”
 },
 {
 “src”: “IMG_7422.png”,
-“sizes”: “512x512”,
+“sizes”: “400x400”,
 “type”: “image/png”,
 “purpose”: “any maskable”
 }
