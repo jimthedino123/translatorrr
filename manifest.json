@@ -1,0 +1,25 @@
+{
+“name”: “SecretLang Translator”,
+“short_name”: “SecretLang”,
+“description”: “Your Personal Language Translator”,
+“start_url”: “/”,
+“display”: “standalone”,
+“background_color”: “#e3f2fd”,
+“theme_color”: “#42a5f5”,
+“orientation”: “portrait”,
+“scope”: “/”,
+“icons”: [
+{
+“src”: “main.png”,
+“sizes”: “192x192”,
+“type”: “image/png”,
+“purpose”: “any maskable”
+},
+{
+“src”: “main.png”,
+“sizes”: “512x512”,
+“type”: “image/png”,
+“purpose”: “any maskable”
+}
+]
+}
