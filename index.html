@@ -286,7 +286,6 @@ input[type="text"]:focus {
   let translationCount = 0;
   let dictionaryLoaded = false;
 
-  // Load translation count from localStorage
   function loadTranslationCount() {
     const saved = localStorage.getItem('secretLang_translationCount');
     if (saved) {
@@ -298,31 +297,21 @@ input[type="text"]:focus {
     }
   }
 
-  // Save translation count to localStorage
   function saveTranslationCount() {
     localStorage.setItem('secretLang_translationCount', translationCount.toString());
   }
 
-  // Load dictionary from JSON file
   async function loadDictionary() {
     try {
       const response = await fetch('dictionary.json');
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       const data = await response.json();
-      
-      if (typeof data !== 'object' || data === null) {
-        throw new Error('Dictionary file does not contain a valid JSON object');
-      }
-      
+      if (typeof data !== 'object' || data === null) throw new Error('Dictionary file invalid');
       dictionary = data;
       buildReverseDictionary();
       dictionaryLoaded = true;
       showMainContent();
       updateStats();
-      
     } catch (err) {
       console.error("Failed to load dictionary:", err);
       showError();
@@ -343,11 +332,7 @@ input[type="text"]:focus {
     document.getElementById('errorSection').style.display = 'none';
     document.getElementById('mainContent').style.display = 'block';
     document.getElementById('mainContent').classList.add('fade-in');
-    
-    // Auto-focus on the input
-    setTimeout(() => {
-      document.getElementById('inputWord').focus();
-    }, 100);
+    setTimeout(() => document.getElementById('inputWord').focus(), 100);
   }
 
   function showError() {
@@ -361,26 +346,44 @@ input[type="text"]:focus {
     document.getElementById('translationCount').textContent = translationCount;
   }
 
-  function translateWord(word) {
-    if (!dictionaryLoaded) {
-      return "Dictionary not loaded yet. Please wait...";
-    }
+  // NEW: sentence translation
+  function translateSentence(sentence) {
+    const words = sentence.split(/\s+/);
+    const translatedWords = words.map(word => {
+      const cleaned = word.toLowerCase().replace(/[^a-zA-Z0-9]/g, "");
+      const punctuation = word.replace(/[a-zA-Z0-9]/gi, "");
 
+      if (dictionary[cleaned]) {
+        return dictionary[cleaned] + punctuation;
+      } else if (reverseDictionary[cleaned]) {
+        return reverseDictionary[cleaned] + punctuation;
+      } else {
+        return word; // keep original if not found
+      }
+    });
+    return translatedWords.join(" ");
+  }
+
+  function translateWord(word) {
+    if (!dictionaryLoaded) return "Dictionary not loaded yet. Please wait...";
     const input = (word || "").trim();
-    if (!input) {
-      return "Please enter a word to translate.";
+    if (!input) return "Please enter a word or sentence to translate.";
+
+    // If input has spaces, treat it as a sentence
+    if (input.includes(" ")) {
+      translationCount++;
+      saveTranslationCount();
+      updateStats();
+      return "✅ Sentence translation:\n" + translateSentence(input);
     }
 
     const lowerInput = input.toLowerCase();
-    
-    // Exact matches
     if (dictionary[lowerInput]) {
       translationCount++;
       saveTranslationCount();
       updateStats();
       return formatResult(input, dictionary[lowerInput], "English → Secret");
     }
-    
     if (reverseDictionary[lowerInput]) {
       translationCount++;
       saveTranslationCount();
@@ -388,38 +391,24 @@ input[type="text"]:focus {
       return formatResult(input, reverseDictionary[lowerInput], "Secret → English");
     }
 
-    // Partial matches
-    const englishMatches = Object.keys(dictionary)
-      .filter(key => key.includes(lowerInput))
-      .slice(0, 10);
-    
-    const secretMatches = Object.keys(reverseDictionary)
-      .filter(key => key.includes(lowerInput))
-      .slice(0, 10);
+    const englishMatches = Object.keys(dictionary).filter(key => key.includes(lowerInput)).slice(0, 10);
+    const secretMatches = Object.keys(reverseDictionary).filter(key => key.includes(lowerInput)).slice(0, 10);
 
     let result = "";
-    
     if (englishMatches.length > 0) {
       result += formatMatches("English matches:", englishMatches.map(key => ({
-        from: key,
-        to: dictionary[key],
-        type: "English → Secret"
+        from: key, to: dictionary[key], type: "English → Secret"
       })));
     }
-    
     if (secretMatches.length > 0) {
       if (result) result += "\n\n";
       result += formatMatches("Secret matches:", secretMatches.map(key => ({
-        from: key,
-        to: reverseDictionary[key],
-        type: "Secret → English"
+        from: key, to: reverseDictionary[key], type: "Secret → English"
       })));
     }
-    
     if (!result) {
-      result = `No matches found for "${input}"\n\nTry checking your spelling or search for partial matches.`;
+      result = `No matches found for "${input}".\nTry checking spelling or entering a sentence.`;
     }
-    
     return result;
   }
 
@@ -429,32 +418,22 @@ input[type="text"]:focus {
 
   function formatMatches(title, matches) {
     let result = `${title}\n`;
-    matches.forEach(match => {
-      result += `  • ${match.from} → ${match.to}\n`;
-    });
+    matches.forEach(match => { result += `  • ${match.from} → ${match.to}\n`; });
     return result;
   }
 
-  // Event listeners
   document.addEventListener('DOMContentLoaded', function() {
-    // Load data
     loadTranslationCount();
     loadDictionary();
-    
     const inputWord = document.getElementById('inputWord');
     const resultDiv = document.getElementById('result');
-    
-    // Translate button
     document.getElementById('translateBtn').addEventListener('click', function() {
       if (!dictionaryLoaded) return;
-      
       const result = translateWord(inputWord.value);
       resultDiv.textContent = result;
       resultDiv.classList.add('fade-in');
       setTimeout(() => resultDiv.classList.remove('fade-in'), 300);
     });
-    
-    // Enter key handler
     inputWord.addEventListener('keydown', function(e) {
       if (e.key === 'Enter' && dictionaryLoaded) {
         document.getElementById('translateBtn').click();
