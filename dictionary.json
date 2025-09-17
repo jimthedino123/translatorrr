@@ -16,7 +16,7 @@
   "thank you": "Taren",
   "okay": "Vera",
   "i’m": "I’m",
- "yay": "yab",
+  "yay": "yab",
   "the": "Es",
   "a": "Un",
   "an": "Un",
@@ -85,5 +85,37 @@
   "big": "groe",
   "little": "Noe",
   "winter": "groenaren",
-  "spring": "Noedaren"
-  }
+  "spring": "Noedaren",
+  "blueberry": "Buberrin",
+  "whipped": "whivra",
+  "grape": "Grivine",
+  "Chicken Nugget": "Polvé Nog",
+  "Chicken": "Polvé",
+  "Nugget": "Nog",
+  "apple": "Oplé",
+  "ketchup": "Tomken",
+  "mayonnaise": "Mayken",
+  "Salad": "Salken",
+  "burger": "Patee",
+  "lettuce": "Tutce",
+  "onion rings": "Onra ain",
+  "Onion": "Onra",
+  "rings": "ain"
+  "prawn": "Prav",
+  "cocktail": "ono"
+  "ice": "Glassa",
+  "cream": "Créme",
+  "cookie": "Cookie",
+  "dough": "Douven",
+  "cupcake": "Tortanoe",
+  "hot chocolate": "Hët Chovra",
+  "hot": "Hët"
+  "chocolate": "Chovra",
+  "whipped": "Whivra",
+  "butter": "Bruta",
+  "pancake": "Pantorta",
+  "Mogu": "Mogu",
+  "Mogu Mogu": "Mogu Mogu",
+  "whipped cream": "Whivra Créme"
+  "Strawberry": "Berrin"
+}
