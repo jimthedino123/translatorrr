@@ -1,13 +1,13 @@
 <!doctype html>
-
 <html>
 <head>
   <meta charset="utf-8">
   <title>Núnúise Translator</title>
   <link rel="manifest" href="manifest.json">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="icon" type="image/x-icon" href="IMG_7422.png">
+  <link rel="icon" type="image/x-icon" href="IMG_7422.png">
   <style>
+    /* <-- unchanged CSS from your file (kept identical) --> */
     * {
       margin: 0;
       padding: 0;
@@ -230,7 +230,6 @@ input[type="text"]:focus {
 .loading {
   animation: pulse 2s ease-in-out infinite;
 }
-
   </style>
 </head>
 <body>
@@ -276,15 +275,25 @@ input[type="text"]:focus {
   </div>
 </div>
 
-
   </div>
 
 <script>
 (function(){
+  // core data
   let dictionary = {};
-  let reverseDictionary = {};
+  let reverseDictionary = {}; // secretLower -> englishOriginal
+  let engNormalizedMap = new Map();    // normalizedEnglish -> englishOriginal
+  let secretNormalizedToEnglish = new Map(); // normalizedSecret -> englishOriginal
+  let maxWords = 1;
+
+  // state
   let translationCount = 0;
   let dictionaryLoaded = false;
+
+  // helpers
+  function normalizeKey(s) {
+    return (s || "").toLowerCase().replace(/\s+/g, " ").trim();
+  }
 
   function loadTranslationCount() {
     const saved = localStorage.getItem('secretLang_translationCount');
@@ -301,6 +310,7 @@ input[type="text"]:focus {
     localStorage.setItem('secretLang_translationCount', translationCount.toString());
   }
 
+  // load dictionary.json
   async function loadDictionary() {
     try {
       const response = await fetch('dictionary.json');
@@ -308,7 +318,7 @@ input[type="text"]:focus {
       const data = await response.json();
       if (typeof data !== 'object' || data === null) throw new Error('Dictionary file invalid');
       dictionary = data;
-      buildReverseDictionary();
+      buildMapsFromDictionary();
       dictionaryLoaded = true;
       showMainContent();
       updateStats();
@@ -318,12 +328,26 @@ input[type="text"]:focus {
     }
   }
 
-  function buildReverseDictionary() {
+  // build reverse map and normalized lookup maps
+  function buildMapsFromDictionary() {
     reverseDictionary = {};
+    engNormalizedMap = new Map();
+    secretNormalizedToEnglish = new Map();
+    maxWords = 1;
+
     for (const [english, secret] of Object.entries(dictionary)) {
-      if (typeof secret === 'string') {
-        reverseDictionary[secret.toLowerCase()] = english;
-      }
+      if (typeof secret !== 'string') continue;
+      const engNorm = normalizeKey(english);
+      const secNorm = normalizeKey(secret);
+      engNormalizedMap.set(engNorm, english);
+      // map normalized secret -> english (for secret->english translations)
+      secretNormalizedToEnglish.set(secNorm, english);
+      // mapping used for quick reverse lookup (secretLower -> englishOriginal)
+      reverseDictionary[secret.toLowerCase()] = english;
+      // track longest phrase length needed
+      const engWords = engNorm ? engNorm.split(' ').length : 0;
+      const secWords = secNorm ? secNorm.split(' ').length : 0;
+      maxWords = Math.max(maxWords, engWords, secWords, 1);
     }
   }
 
@@ -346,45 +370,112 @@ input[type="text"]:focus {
     document.getElementById('translationCount').textContent = translationCount;
   }
 
-  // NEW: sentence translation
+  // Unicode-aware strip of leading/trailing non-letter/number
+  function stripEdgeNonAlnum(s) {
+    // uses Unicode property escapes (modern browsers)
+    return s.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
+  }
+
+  function isWhitespaceToken(tok) {
+    return /^\s+$/.test(tok);
+  }
+
+  function startsWithCapitalLetter(tok) {
+    const m = tok.match(/\p{L}/u);
+    return m ? (m[0] === m[0].toUpperCase()) : false;
+  }
+
+  function applyCapitalization(originalToken, replacement) {
+    if (!replacement) return replacement;
+    if (startsWithCapitalLetter(originalToken)) {
+      return replacement.charAt(0).toUpperCase() + replacement.slice(1);
+    }
+    return replacement;
+  }
+
+  // Robust sentence/phrase translator (handles multi-word entries and both directions)
   function translateSentence(sentence) {
-    function translateSentence(sentence) {
-  let lower = sentence.toLowerCase();
+    if (!dictionaryLoaded) return sentence;
 
-  // Sort keys so longer phrases (multi-word) get matched first
-  const keys = Object.keys(dictionary).sort((a, b) => b.length - a.length);
+    // keep original spacing/punctuation by splitting but keeping whitespace tokens
+    const tokens = sentence.split(/(\s+)/);
+    const out = [];
 
-  for (let key of keys) {
-    // Escape regex special chars
-    const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    // Match whole words/phrases, case-insensitive
-    const regex = new RegExp("\\b" + escapedKey + "\\b", "gi");
-    lower = lower.replace(regex, dictionary[key]);
-  }
+    for (let i = 0; i < tokens.length; i++) {
+      const tok = tokens[i];
+      if (isWhitespaceToken(tok)) { out.push(tok); continue; }
 
-  return lower;
-}
-    const translatedWords = words.map(word => {
-      const cleaned = word.toLowerCase().replace(/[^a-zA-Z0-9]/g, "");
-      const punctuation = word.replace(/[a-zA-Z0-9]/gi, "");
+      // count how many real (non-whitespace) tokens remain
+      let remaining = 0;
+      for (let k = i; k < tokens.length; k++) if (!isWhitespaceToken(tokens[k])) remaining++;
 
-      if (dictionary[cleaned]) {
-        return dictionary[cleaned] + punctuation;
-      } else if (reverseDictionary[cleaned]) {
-        return reverseDictionary[cleaned] + punctuation;
-      } else {
-        return word; // keep original if not found
+      let matched = false;
+      const tryMax = Math.min(maxWords, remaining);
+
+      // try the longest phrase first (greedy)
+      for (let wc = tryMax; wc >= 1 && !matched; wc--) {
+
+        // collect indices of the next wc non-whitespace tokens
+        const idxs = [];
+        let p = i;
+        while (p < tokens.length && idxs.length < wc) {
+          if (!isWhitespaceToken(tokens[p])) idxs.push(p);
+          p++;
+        }
+        if (idxs.length < wc) continue;
+
+        // build cleaned parts for candidate
+        const cleanedParts = idxs.map(idx => stripEdgeNonAlnum(tokens[idx]).toLowerCase());
+        const candidate = cleanedParts.join(' ').trim();
+        if (!candidate) continue;
+
+        // check english -> secret
+        if (engNormalizedMap.has(candidate)) {
+          const englishKey = engNormalizedMap.get(candidate);
+          let replacement = dictionary[englishKey];
+          // preserve leading/trailing punctuation from first/last tokens
+          const first = tokens[idxs[0]];
+          const last = tokens[idxs[idxs.length - 1]];
+          const leading = (first.match(/^[^\p{L}\p{N}]*/u) || [""])[0];
+          const trailing = (last.match(/[^\p{L}\p{N}]*$/u) || [""])[0];
+          replacement = applyCapitalization(first, replacement);
+          out.push(leading + replacement + trailing);
+          i = idxs[idxs.length - 1]; // advance past matched tokens
+          matched = true;
+          break;
+        }
+
+        // check secret -> english
+        if (secretNormalizedToEnglish.has(candidate)) {
+          const english = secretNormalizedToEnglish.get(candidate);
+          let replacement = english;
+          const first = tokens[idxs[0]];
+          const last = tokens[idxs[idxs.length - 1]];
+          const leading = (first.match(/^[^\p{L}\p{N}]*/u) || [""])[0];
+          const trailing = (last.match(/[^\p{L}\p{N}]*$/u) || [""])[0];
+          replacement = applyCapitalization(first, replacement);
+          out.push(leading + replacement + trailing);
+          i = idxs[idxs.length - 1];
+          matched = true;
+          break;
+        }
       }
-    });
-    return translatedWords.join(" ");
+
+      if (!matched) {
+        // no multi-word match; keep original token
+        out.push(tok);
+      }
+    }
+
+    return out.join('');
   }
 
+  // single-word/sentence entry handler
   function translateWord(word) {
     if (!dictionaryLoaded) return "Dictionary not loaded yet. Please wait...";
     const input = (word || "").trim();
     if (!input) return "Please enter a word or sentence to translate.";
 
-    // If input has spaces, treat it as a sentence
     if (input.includes(" ")) {
       translationCount++;
       saveTranslationCount();
@@ -393,12 +484,18 @@ input[type="text"]:focus {
     }
 
     const lowerInput = input.toLowerCase();
-    if (dictionary[lowerInput]) {
+
+    // try exact english -> secret
+    // Normalize keys for lookup
+    const engKey = Object.keys(dictionary).find(k => normalizeKey(k) === normalizeKey(input));
+    if (engKey) {
       translationCount++;
       saveTranslationCount();
       updateStats();
-      return formatResult(input, dictionary[lowerInput], "English → Secret");
+      return formatResult(input, dictionary[engKey], "English → Secret");
     }
+
+    // try exact secret -> english
     if (reverseDictionary[lowerInput]) {
       translationCount++;
       saveTranslationCount();
@@ -406,7 +503,8 @@ input[type="text"]:focus {
       return formatResult(input, reverseDictionary[lowerInput], "Secret → English");
     }
 
-    const englishMatches = Object.keys(dictionary).filter(key => key.includes(lowerInput)).slice(0, 10);
+    // fuzzy matches (contains)
+    const englishMatches = Object.keys(dictionary).filter(key => key.toLowerCase().includes(lowerInput)).slice(0, 10);
     const secretMatches = Object.keys(reverseDictionary).filter(key => key.includes(lowerInput)).slice(0, 10);
 
     let result = "";
@@ -437,6 +535,7 @@ input[type="text"]:focus {
     return result;
   }
 
+  // UI wiring
   document.addEventListener('DOMContentLoaded', function() {
     loadTranslationCount();
     loadDictionary();
@@ -459,4 +558,4 @@ input[type="text"]:focus {
 </script>
 
 </body>
-</html>
+</html></html>
