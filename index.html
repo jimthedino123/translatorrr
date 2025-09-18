@@ -348,7 +348,22 @@ input[type="text"]:focus {
 
   // NEW: sentence translation
   function translateSentence(sentence) {
-    const words = sentence.split(/\s+/);
+    function translateSentence(sentence) {
+  let lower = sentence.toLowerCase();
+
+  // Sort keys so longer phrases (multi-word) get matched first
+  const keys = Object.keys(dictionary).sort((a, b) => b.length - a.length);
+
+  for (let key of keys) {
+    // Escape regex special chars
+    const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // Match whole words/phrases, case-insensitive
+    const regex = new RegExp("\\b" + escapedKey + "\\b", "gi");
+    lower = lower.replace(regex, dictionary[key]);
+  }
+
+  return lower;
+}
     const translatedWords = words.map(word => {
       const cleaned = word.toLowerCase().replace(/[^a-zA-Z0-9]/g, "");
       const punctuation = word.replace(/[a-zA-Z0-9]/gi, "");
