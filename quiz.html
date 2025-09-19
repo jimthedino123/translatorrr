@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Núnúise 3-Level Quiz</title>
+<style>
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --accent:#6ee7b7;
+    --muted:#94a3b8;
+    --danger:#ff6b6b;
+    --glass: rgba(255,255,255,0.04);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:linear-gradient(180deg,#071020 0%, #071827 60%);
+    color:#e6eef6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+  .container{
+    width:100%;
+    max-width:920px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;
+    padding:28px;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.7);
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  header h1{font-size:20px;margin:0}
+  header .meta{color:var(--muted);font-size:13px}
+  .level-select{
+    display:flex;
+    gap:8px;
+    margin-bottom:18px;
+  }
+  .btn{
+    background:var(--glass);
+    border:1px solid rgba(255,255,255,0.04);
+    padding:10px 14px;
+    border-radius:8px;
+    color:inherit;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn.primary{
+    background:linear-gradient(90deg, rgba(110,231,183,0.12), rgba(110,231,183,0.06));
+    border:1px solid rgba(110,231,183,0.14);
+    color:var(--accent);
+  }
+  .card{
+    background:rgba(255,255,255,0.02);
+    padding:18px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.02);
+    min-height:160px;
+  }
+  .question{
+    font-size:18px;
+    margin-bottom:12px;
+  }
+  .choices{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+  .choice{
+    background:rgba(255,255,255,0.02);
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.02);
+    cursor:pointer;
+  }
+  .choice:hover{transform:translateX(6px)}
+  .controls{display:flex;gap:8px;align-items:center;margin-top:8px}
+  .hint{
+    background:transparent;
+    color:var(--muted);
+    border:1px dashed rgba(255,255,255,0.03);
+    padding:8px 12px;border-radius:8px;cursor:pointer;
+  }
+  .status{display:flex;gap:12px;align-items:center;color:var(--muted);font-size:14px}
+  .score{font-weight:700;color:var(--accent)}
+  .result{margin-top:12px;color:var(--muted)}
+  .input-answer{
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.04);
+    background:transparent;
+    color:inherit;
+    font-size:16px;
+  }
+  .footer{
+    margin-top:14px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;
+  }
+  .small{font-size:13px;color:var(--muted)}
+  .correct{color:var(--accent);font-weight:700}
+  .incorrect{color:var(--danger);font-weight:700}
+  .center{text-align:center}
+  /* responsive */
+  @media (max-width:560px){
+    header{flex-direction:column;gap:8px;align-items:flex-start}
+    .controls{flex-direction:column;align-items:stretch}
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="application" aria-label="Núnúise Quiz">
+    <header>
+      <div>
+        <h1>Núnúise — 3-Level Quiz</h1>
+        <div class="meta">Practice your Núnúise vocabulary — 5 questions per level. Use hint if stuck.</div>
+      </div>
+      <div class="status">
+        <div>Level: <span id="current-level">—</span></div>
+        <div>Question: <span id="q-index">0</span>/5</div>
+        <div>Score: <span id="score" class="score">0</span></div>
+      </div>
+    </header>
+
+    <div class="level-select" role="tablist" aria-label="Choose level">
+      <button class="btn" data-level="easy">Easy (Multiple Choice)</button>
+      <button class="btn" data-level="medium">Medium (Type answer)</button>
+      <button class="btn" data-level="hard">Hard (Translate reverse)</button>
+      <button class="btn primary" id="start-btn">Start</button>
+    </div>
+
+    <div class="card" id="quiz-card" aria-live="polite">
+      <div id="welcome">
+        <p class="question">Welcome — choose a level then press <strong>Start</strong>. The dictionary used is Núnúise (English → Núnúise).</p>
+        <p class="small">Hint button reveals the first two letters of the correct answer but reduces that question's points.</p>
+      </div>
+
+      <div id="game" style="display:none">
+        <div class="question" id="question-text">Question appears here</div>
+
+        <div id="choices-wrapper">
+          <div class="choices" id="choices"></div>
+          <input type="text" id="answer-input" class="input-answer" placeholder="Type your answer here" style="display:none" autocomplete="off" />
+        </div>
+
+        <div class="controls">
+          <button class="btn" id="submit-btn">Submit</button>
+          <button class="btn hint" id="hint-btn">Show hint (costs points)</button>
+          <button class="btn" id="skip-btn">Skip</button>
+          <div style="flex:1"></div>
+          <div class="small" id="question-points">Points for this Q: 10</div>
+        </div>
+
+        <div class="result" id="result" aria-live="polite"></div>
+      </div>
+
+      <div id="final" style="display:none" class="center">
+        <h2>Quiz complete!</h2>
+        <p class="small">Your final score is <span id="final-score" class="score">0</span> / 50</p>
+        <p id="final-message" class="small"></p>
+        <div style="margin-top:12px">
+          <button class="btn" id="restart-btn">Play again</button>
+          <button class="btn" id="review-btn">Review missed words</button>
+        </div>
+        <div id="missed-list" style="margin-top:14px"></div>
+      </div>
+
+    </div>
+
+    <div class="footer">
+      <div class="small">Dictionary source: user's Núnúise word list (English → Núnúise).</div>
+      <div class="small">Hints reveal first two letters. Each question: 10 points; using hint sets that Q to 5 points.</div>
+    </div>
+  </div>
+
+<script>
+/*
+  Núnúise Quiz
+  - Uses user's provided dictionary (English -> Núnúise)
+  - 3 levels:
+    easy: English shown, choose the correct Núnúise (multiple choice)
+    medium: English shown, type the Núnúise translation
+    hard: Núnúise shown, type the English translation (reverse)
+  - 5 questions per level chosen randomly
+  - Hint reveals first two letters (or full if shorter) and reduces question points
+  - Scoring: each question worth up to 10 points (hint reduces to 5). Wrong: 0.
+*/
+
+// --- the dictionary provided by the user (kept as-is) ---
+const DICT = {
+  "she": "Sela",
+  "her": "Selam",
+  "he": "Viro",
+  "him": "Virem",
+  "i": "Ti",
+  "it": "Ota",
+  "its": "Oti",
+  "hello": "Sallo",
+  "hi": "Ollo",
+  "hey": "Ollo",
+  "bye": "Navin",
+  "goodbye": "Luninavin",
+  "no": "Nahr",
+  "yes": "Lai",
+  "please": "Taru",
+  "thank you": "Taren",
+  "okay": "Vera",
+  "i’m": "I’m",
+  "yay": "yab",
+  "the": "Es",
+  "a": "Un",
+  "an": "Un",
+  "but": "Tav",
+  "are": "ar",
+  "because": "bcu",
+  "and": "Jün",
+  "also": "Jün",
+  "day": "Daren",
+  "night": "Naren",
+  "oh no": "Shavi",
+  "teehee": "Snivvi",
+  "sad": "Zavi",
+  "happy": "Zava",
+  "awkwardness": "Clob/beep",
+  "excitement": "Vetra",
+  "happy": "Lunira",
+  "sadness": "Moren",
+  "fear": "sir",
+  "anxiousness": "sir",
+  "food": "Kora",
+  "water": "Korin",
+  "drink": "Korin",
+  "cheese": "Kaw",
+  "bread": "Bonn",
+  "chips": "Pota",
+  "fries": "Pota",
+  "crisps": "Cribs",
+  "gum": "Chöw",
+  "sparkling water": "Spriwasser",
+  "coca cola": "Sprikok",
+  "dr pepper": "Spripepper DR",
+  "sprite": "Sprise",
+  "yummy": "Yus",
+  "spicy": "piko",
+  "sour": "Sór",
+  "thirsty": "Selin",
+  "do": "Dro",
+  "don’t": "Dron",
+  "want": "Frenk",
+  "can": "Kap",
+  "should": "ferd",
+  "go": "og",
+  "talking": "Nibble Nabbling",
+  "Need": "jeve",
+  "have": "have",
+  "hate": "haet",
+  "like": "loik",
+  "friend": "Mira",
+  "tilly": "Nilly",
+  "luck": "Nuck",
+  "trin": "Posey",
+  "isabella": "cheryl",
+  "tyler": "Nyler",
+  "smith": "Nith",
+  "hungry": "Mavro",
+  "stop": "Pöts",
+  "heart": "bumbum",
+  "head": "Häd",
+  "and": "jün",
+  "leaves": "evéa",
+  "leaf": "evét",
+  "autumn": "evétorl",
+  "fall": "orl",
+  "summer": "grodaren",
+  "big": "groe",
+  "little": "Noe",
+  "winter": "groenaren",
+  "spring": "Noedaren",
+  "blueberry": "Buberrin",
+  "whipped": "whivra",
+  "grape": "Grivine",
+  "Chicken Nugget": "Polvé Nog",
+  "Chicken": "Polvé",
+  "Nugget": "Nog",
+  "apple": "Oplé",
+  "ketchup": "Tomken",
+  "mayonnaise": "Mayken",
+  "Salad": "Salken",
+  "burger": "Patee",
+  "lettuce": "Tutce",
+  "onion rings": "Onra ain",
+  "Onion": "Onra",
+  "rings": "ain",
+  "prawn": "Prav",
+  "cocktail": "ono",
+  "ice": "Glassa",
+  "cream": "Créme",
+  "cookie": "Cookie",
+  "dough": "Douven",
+  "cupcake": "Tortanoe",
+  "hot chocolate": "Hët Chovra",
+  "hot": "Hët",
+  "chocolate": "Chovra",
+  "whipped": "Whivra",
+  "butter": "Bruta",
+  "pancake": "Pantorta",
+  "Mogu": "Mogu",
+  "Mogu Mogu": "Mogu Mogu",
+  "whipped cream": "Whivra Créme",
+  "Strawberry": "Berrin",
+  "Idiot": "Monologue",
+  "you": "Ü",
+  "fuck": "Flunge-On",
+  "ón": "Smelly"
+};
+
+// --- utility helpers ---
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+function randomChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+// prepare arrays
+const ENTRIES = Object.entries(DICT).map(([k,v])=>({en:k, nu:v}));
+const NU_TO_EN = {};
+for(const [k,v] of Object.entries(DICT)) NU_TO_EN[v] = k;
+
+// UI elements
+const levelButtons = document.querySelectorAll('.level-select .btn[data-level]');
+const startBtn = document.getElementById('start-btn');
+const currentLevelEl = document.getElementById('current-level');
+const qIndexEl = document.getElementById('q-index');
+const scoreEl = document.getElementById('score');
+const questionText = document.getElementById('question-text');
+const choicesWrapper = document.getElementById('choices');
+const answerInput = document.getElementById('answer-input');
+const submitBtn = document.getElementById('submit-btn');
+const hintBtn = document.getElementById('hint-btn');
+const skipBtn = document.getElementById('skip-btn');
+const questionPointsEl = document.getElementById('question-points');
+const resultEl = document.getElementById('result');
+const welcomeEl = document.getElementById('welcome');
+const gameEl = document.getElementById('game');
+const finalEl = document.getElementById('final');
+const finalScoreEl = document.getElementById('final-score');
+const restartBtn = document.getElementById('restart-btn');
+const reviewBtn = document.getElementById('review-btn');
+const missedListEl = document.getElementById('missed-list');
+
+let selectedLevel = 'easy';
+let questions = [];
+let qPointer = 0;
+let totalScore = 0;
+let currentQ = null;
+let currentQPoints = 10;
+let usedHint = false;
+let missed = [];
+
+// set default selected button UI
+levelButtons.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    levelButtons.forEach(b=>b.classList.remove('primary'));
+    btn.classList.add('primary');
+    selectedLevel = btn.getAttribute('data-level');
+    currentLevelEl.textContent = selectedLevel.toUpperCase();
+  });
+});
+// default select easy
+document.querySelector('.level-select .btn[data-level="easy"]').classList.add('primary');
+currentLevelEl.textContent = 'EASY';
+
+// build questions (5 per level) - called on start
+function buildQuestions(level){
+  // create a copy and shuffle to pick words
+  const pool = [...ENTRIES];
+  shuffle(pool);
+  const picks = pool.slice(0,5);
+  const out = picks.map(item=>{
+    return {
+      en: item.en,
+      nu: item.nu,
+      // for easy/medium: English -> Núnúise; for hard: Núnúise -> English
+    };
+  });
+  return out;
+}
+
+function startQuiz(){
+  questions = buildQuestions(selectedLevel);
+  qPointer = 0; totalScore = 0; missed = [];
+  scoreEl.textContent = totalScore;
+  qIndexEl.textContent = '0';
+  welcomeEl.style.display = 'none';
+  finalEl.style.display = 'none';
+  gameEl.style.display = '';
+  resultEl.textContent = '';
+  nextQuestion();
+}
+
+startBtn.addEventListener('click', startQuiz);
+
+// move to next question
+function nextQuestion(){
+  usedHint = false;
+  currentQPoints = 10;
+  questionPointsEl.textContent = 'Points for this Q: ' + currentQPoints;
+  resultEl.textContent = '';
+  if(qPointer >= questions.length){
+    endQuiz();
+    return;
+  }
+  qPointer++;
+  qIndexEl.textContent = qPointer;
+  currentQ = questions[qPointer-1];
+  renderQuestion(currentQ);
+}
+
+function renderQuestion(q){
+  // clear previous
+  choicesWrapper.style.display = '';
+  choicesWrapper.querySelectorAll('.choices, input').forEach(()=>{}); // noop
+  choicesWrapper.querySelectorAll('input');
+
+  // depending on level
+  if(selectedLevel === 'easy'){
+    // show English and 4 choices (one correct)
+    questionText.textContent = `What is the Núnúise for "${q.en}"?`;
+    answerInput.style.display = 'none';
+    choicesWrapper.style.display = '';
+    choicesWrapper.querySelectorAll('*').forEach(()=>{}); // noop
+
+    // build 3 distractors
+    const allNu = ENTRIES.map(e=>e.nu);
+    const correct = q.nu;
+    const distractors = [];
+    while(distractors.length < 3){
+      const pick = randomChoice(allNu);
+      if(pick !== correct && !distractors.includes(pick)) distractors.push(pick);
+    }
+    const options = shuffle([correct, ...distractors]);
+    choicesWrapper.innerHTML = '';
+    options.forEach(opt=>{
+      const btn = document.createElement('button');
+      btn.className = 'choice';
+      btn.textContent = opt;
+      btn.setAttribute('type','button');
+      btn.addEventListener('click', ()=> handleChoice(opt));
+      choicesWrapper.appendChild(btn);
+    });
+  } else if(selectedLevel === 'medium'){
+    // type in Núnúise from English prompt
+    questionText.textContent = `Type the Núnúise for "${q.en}" (spelling & accents matter).`;
+    choicesWrapper.innerHTML = '';
+    answerInput.style.display = '';
+    answerInput.value = '';
+    answerInput.focus();
+  } else if(selectedLevel === 'hard'){
+    // reverse: show Núnúise, ask for English
+    questionText.textContent = `What English word corresponds to "${q.nu}"? (case-insensitive)`;
+    choicesWrapper.innerHTML = '';
+    answerInput.style.display = '';
+    answerInput.value = '';
+    answerInput.focus();
+  }
+}
+
+// handle multiple-choice click
+function handleChoice(choiceVal){
+  const correct = currentQ.nu;
+  if(choiceVal === correct){
+    resultEl.innerHTML = `<span class="correct">Correct!</span> — +${currentQPoints} points`;
+    totalScore += currentQPoints;
+  } else {
+    resultEl.innerHTML = `<span class="incorrect">Wrong.</span> Correct: <strong>${correct}</strong>`;
+    missed.push({en: currentQ.en, nu: currentQ.nu});
+  }
+  scoreEl.textContent = totalScore;
+  // small delay then next
+  setTimeout(nextQuestion, 900);
+}
+
+submitBtn.addEventListener('click', submitAnswer);
+answerInput.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') submitAnswer();
+});
+
+function normalize(str){
+  if(!str) return '';
+  return str.trim();
+}
+
+function submitAnswer(){
+  if(!currentQ) return;
+  if(selectedLevel === 'easy'){
+    resultEl.textContent = 'Please select one of the choices.';
+    return;
+  }
+  const user = normalize(answerInput.value);
+  if(user === ''){
+    resultEl.textContent = 'Please enter an answer or use Skip.';
+    return;
+  }
+  if(selectedLevel === 'medium'){
+    // English -> Núnúise: exact match most of the time
+    const correct = currentQ.nu;
+    if(user === correct){
+      resultEl.innerHTML = `<span class="correct">Correct!</span> — +${currentQPoints} points`;
+      totalScore += currentQPoints;
+    } else {
+      resultEl.innerHTML = `<span class="incorrect">Wrong.</span> Correct: <strong>${correct}</strong>`;
+      missed.push({en: currentQ.en, nu: currentQ.nu, given: user});
+    }
+  } else if(selectedLevel === 'hard'){
+    // Núnúise -> English: case-insensitive match to currentQ.en
+    const correct = currentQ.en.toLowerCase();
+    if(user.toLowerCase() === correct){
+      resultEl.innerHTML = `<span class="correct">Correct!</span> — +${currentQPoints} points`;
+      totalScore += currentQPoints;
+    } else {
+      resultEl.innerHTML = `<span class="incorrect">Wrong.</span> Correct: <strong>${currentQ.en}</strong>`;
+      missed.push({en: currentQ.en, nu: currentQ.nu, given: user});
+    }
+  }
+  scoreEl.textContent = totalScore;
+  setTimeout(nextQuestion, 900);
+}
+
+// hint behavior
+hintBtn.addEventListener('click', ()=>{
+  if(!currentQ) return;
+  if(usedHint){
+    resultEl.textContent = 'Hint already used for this question.';
+    return;
+  }
+  usedHint = true;
+  // reveal first 2 letters of the correct answer
+  const reveal = (selectedLevel === 'hard') ? currentQ.en : currentQ.nu;
+  let hintText = reveal.slice(0,2);
+  if(hintText.length === 0) hintText = reveal;
+  resultEl.innerHTML = `<em>Hint:</em> starts with "<strong>${hintText}</strong>"`;
+  // reduce points for this question
+  currentQPoints = 5;
+  questionPointsEl.textContent = 'Points for this Q: ' + currentQPoints;
+});
+
+// skip behavior
+skipBtn.addEventListener('click', ()=>{
+  if(!currentQ) return;
+  missed.push(currentQ);
+  resultEl.innerHTML = `<span class="small">Skipped. Correct: <strong>${selectedLevel === 'hard' ? currentQ.en : currentQ.nu}</strong></span>`;
+  setTimeout(nextQuestion, 900);
+});
+
+// end quiz
+function endQuiz(){
+  gameEl.style.display = 'none';
+  finalEl.style.display = '';
+  finalScoreEl.textContent = totalScore;
+  const maxPossible = questions.length * 10;
+  const perc = Math.round((totalScore / maxPossible) * 100);
+  const msg = perc >= 80 ? "Great job — you're fluent-ing up!" : (perc >= 50 ? "Nice! Keep practising." : "Keep going — practice makes perfect!");
+  document.getElementById('final-message').textContent = `${msg} You scored ${perc}% of the maximum ${maxPossible} points.`;
+  // show missed items compactly
+  renderMissed();
+}
+
+// render missed list (used for review button too)
+function renderMissed(){
+  if(missed.length === 0){
+    missedListEl.innerHTML = '<div class="small">No missed words — well done!</div>';
+    return;
+  }
+  const rows = missed.map(m=>{
+    if(m.given){
+      return `<li>${m.en} — ${m.nu} (you: ${escapeHtml(m.given)})</li>`;
+    } else {
+      return `<li>${m.en} — ${m.nu}</li>`;
+    }
+  }).join('');
+  missedListEl.innerHTML = `<div class="small">Missed / reviewed:</div><ul style="margin-top:8px">${rows}</ul>`;
+}
+
+function escapeHtml(s){
+  if(!s) return '';
+  return s.replace(/[&<>"']/g, (c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'" : '&#39;'}[c]));
+}
+
+restartBtn.addEventListener('click', ()=>{
+  // reset view and pick same selected level unless user changes it
+  welcomeEl.style.display = '';
+  gameEl.style.display = 'none';
+  finalEl.style.display = 'none';
+  currentLevelEl.textContent = selectedLevel.toUpperCase();
+  scoreEl.textContent = '0';
+  qIndexEl.textContent = '0';
+});
+
+reviewBtn.addEventListener('click', ()=>{
+  // toggle showing missed items
+  const visible = missedListEl.style.display !== 'block';
+  missedListEl.style.display = visible ? 'block' : 'none';
+});
+
+// small UX: set initial state
+scoreEl.textContent = '0';
+qIndexEl.textContent = '0';
+questionPointsEl.textContent = 'Points for this Q: 10';
+</script>
+</body>
+</html>
