@@ -64,6 +64,7 @@
   "go": "og",
   "talking": "Nibble Nabbling",
   "Need": "jeve",
+  "love": "loik",
   "have": "have",
   "hate": "haet",
   "like": "loik",
@@ -140,5 +141,6 @@
   "Ruler": "Rool",
   "Cold": "Kalt",
   "it’s": "oti",
-  "his": "Virem"
+  "his": "Virem",
+  "dislike": "desloik"
 }
