@@ -4,111 +4,246 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Núnúise Dictionary</title>
+
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f7f8fb;
-        color: #333;
-        margin: 0;
-        padding: 0;
-    }
-    header {
-        background: #5c6bc0;
-        color: #fff;
-        padding: 1.5rem;
-        text-align: center;
-    }
-    .search-container {
-        margin: 2rem auto;
-        text-align: center;
-    }
-    input[type="text"] {
-        width: 80%;
-        max-width: 500px;
-        padding: 0.75rem;
-        font-size: 1rem;
-        border: 2px solid #5c6bc0;
-        border-radius: 6px;
-    }
-    #result {
-        margin-top: 1.5rem;
-        text-align: center;
-        font-size: 1.25rem;
-        min-height: 2rem;
-        color: #222;
-    }
-    .word-list {
-        margin: 2rem auto;
-        max-width: 800px;
-        padding: 0;
-        list-style: none;
-    }
-    .word-list li {
-        background: #fff;
-        border: 1px solid #ddd;
-        margin: 0.5rem 0;
-        padding: 0.75rem;
-        border-radius: 4px;
-        display: flex;
-        justify-content: space-between;
-        font-size: 1rem;
-    }
-    .word-list li span {
-        font-weight: bold;
-        color: #5c6bc0;
-    }
+body {
+    font-family: Arial, sans-serif;
+    background: #f9faff;
+    margin: 0;
+    padding: 0;
+    color: #222;
+}
+header {
+    background: #556cd6;
+    padding: 1.5rem;
+    text-align: center;
+    color: white;
+}
+.search-box {
+    text-align: center;
+    margin: 2rem;
+}
+.search-box input {
+    width: 80%;
+    max-width: 480px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 2px solid #556cd6;
+    border-radius: 6px;
+}
+.category-section {
+    max-width: 900px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+}
+.category-title {
+    font-size: 1.6rem;
+    color: #556cd6;
+    border-bottom: 2px solid #556cd6;
+    padding-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+.word-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 0.75rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+.word-main {
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+.word-translation {
+    color: #556cd6;
+}
+.word-desc {
+    margin-top: 0.4rem;
+    font-size: 0.95rem;
+    opacity: 0.9;
+}
 </style>
 </head>
 <body>
 
 <header>
     <h1>Núnúise Dictionary</h1>
-    <p>Search for an English word to find its Núnúise translation</p>
+    <p>Search and explore Núnúise words with categories</p>
 </header>
 
-<div class="search-container">
-    <input type="text" id="searchInput" placeholder="Type an English word..." autocomplete="off">
-    <div id="result"></div>
+<div class="search-box">
+    <input type="text" id="search" placeholder="Search any English word...">
 </div>
 
-<ul class="word-list" id="wordList"></ul>
+<div id="dictionary"></div>
 
 <script>
-(async function() {
-    // Fetch the JSON dictionary file
-    const response = await fetch('https://nunuise.netlify.app/dictionary.json');
-    const dictionary = await response.json();
+const categories = {
+    "Pronouns": ["she","her","he","him","i","it","its","you","his"],
+    "Greetings": ["hello","hi","hey","bye","goodbye","please","thank you","okay","yay"],
+    "Basics": ["yes","no","and","but","are","because","the","a","an","with"],
+    "Emotions": ["happy","sad","excitement","sadness","fear","awkwardness","thirsty","hungry"],
+    "Food & Drink": ["food","water","drink","cheese","bread","chips","crisps","gum",
+                     "sparkling water","coca cola","dr pepper","sprite","yummy",
+                     "spicy","sour","apple","blueberry","chicken","burger","salad",
+                     "ketchup","mayonnaise","onion rings","prawn","hot chocolate",
+                     "ice","cream","cookie","cupcake","cake"],
+    "Actions": ["do","don’t","want","can","should","need","go","talking","love","have","hate","like","stop"],
+    "School": ["lessons","english","maths","science","teacher","art","book","equipment","pen","pencil","ruler"],
+    "Seasons & Nature": ["day","night","autumn","spring","summer","winter","leaf","leaves"],
+    "Other": ["luck","friend","idiot","fuck","smelly","cold"]
+};
 
-    const searchInput = document.getElementById('searchInput');
-    const resultDiv = document.getElementById('result');
-    const wordListEl = document.getElementById('wordList');
+const descriptions = {
+    "she":"third-person female pronoun",
+    "her":"object form of she",
+    "he":"third-person male pronoun",
+    "him":"object form of he",
+    "i":"first-person pronoun",
+    "it":"neutral pronoun",
+    "you":"second-person pronoun",
+    "his":"possessive form of he",
+    "hello":"a greeting",
+    "hi":"a casual greeting",
+    "hey":"another friendly greeting",
+    "bye":"a short way to say farewell",
+    "goodbye":"a polite farewell",
+    "please":"polite request word",
+    "thank you":"expression of gratitude",
+    "okay":"agreement or acknowledgment",
+    "yay":"expression of excitement",
+    "yes":"affirmative answer",
+    "no":"negative answer",
+    "and":"connects words",
+    "but":"contrast word",
+    "are":"form of be",
+    "because":"reason word",
+    "the":"definite article",
+    "a":"indefinite article",
+    "an":"indefinite article before vowels",
+    "with":"indicates accompaniment",
+    "happy":"positive emotion",
+    "sad":"negative emotion",
+    "excitement":"a feeling of eager joy",
+    "sadness":"a feeling of sorrow",
+    "fear":"feeling scared",
+    "awkwardness":"feeling uncomfortable",
+    "thirsty":"need for drink",
+    "hungry":"need for food",
+    "food":"what you eat",
+    "water":"drink that sustains life",
+    "drink":"liquid to consume",
+    "cheese":"dairy food",
+    "bread":"basic baked food",
+    "chips":"fried potato snack",
+    "crisps":"British for potato chips",
+    "gum":"chewable candy",
+    "sparkling water":"carbonated water",
+    "coca cola":"brand soda",
+    "dr pepper":"another soda drink",
+    "sprite":"lemon-lime soda",
+    "yummy":"tastes good",
+    "spicy":"hot taste",
+    "sour":"acidic taste",
+    "apple":"common fruit",
+    "blueberry":"blue berry fruit",
+    "chicken":"meat from chicken",
+    "burger":"meat sandwich",
+    "salad":"mixed vegetables",
+    "ketchup":"tomato condiment",
+    "mayonnaise":"cream condiment",
+    "onion rings":"fried onion slices",
+    "prawn":"seafood",
+    "hot chocolate":"warm cocoa drink",
+    "ice":"frozen water",
+    "cream":"dairy topping",
+    "cookie":"sweet baked snack",
+    "cupcake":"small cake",
+    "cake":"baked sweet dessert",
+    "do":"perform an action",
+    "don’t":"negation of do",
+    "want":"desire something",
+    "can":"ability word",
+    "should":"suggestion word",
+    "need":"require something",
+    "go":"move somewhere",
+    "talking":"speaking",
+    "love":"deep affection",
+    "have":"to possess",
+    "hate":"strong dislike",
+    "like":"mild affection",
+    "stop":"end an activity",
+    "lessons":"classes at school",
+    "english":"subject",
+    "maths":"math subject",
+    "science":"science subject",
+    "teacher":"educator",
+    "art":"creative class",
+    "book":"reading material",
+    "equipment":"tools you need",
+    "pen":"writing tool",
+    "pencil":"writing tool with lead",
+    "ruler":"measuring tool",
+    "day":"period of light",
+    "night":"period of dark",
+    "autumn":"fall season",
+    "spring":"season of new growth",
+    "summer":"hot season",
+    "winter":"cold season",
+    "leaf":"single plant leaf",
+    "leaves":"multiple plant leaves",
+    "luck":"fortune",
+    "friend":"person you like",
+    "idiot":"rude insult word",
+    "fuck":"strong swear word",
+    "smelly":"has a strong odor",
+    "cold":"low temperature"
+};
 
-    // Show full list initially (optional: long)
-    const keys = Object.keys(dictionary).sort();
-    keys.forEach(key => {
-        const li = document.createElement('li');
-        li.innerHTML = `<span>${key}</span> → ${dictionary[key]}`;
-        wordListEl.appendChild(li);
-    });
+let dict = {};
+fetch("https://nunuise.netlify.app/dictionary.json")
+  .then(r => r.json())
+  .then(data => {
+    dict = data;
+    displayDictionary();
+  });
 
-    // Filter results on input
-    searchInput.addEventListener('input', function() {
-        const query = this.value.trim().toLowerCase();
-        resultDiv.textContent = '';
-        if (!query) return;
+const searchEl = document.getElementById("search");
+const container = document.getElementById("dictionary");
 
-        // Find exact or partial matches
-        const matches = keys.filter(word => word.toLowerCase().startsWith(query));
-        if (matches.length === 0) {
-            resultDiv.textContent = 'No match found';
-            return;
-        }
+searchEl.addEventListener("input", displayDictionary);
 
-        // Display best match
-        const match = matches[0];
-        resultDiv.textContent = `${match} → ${dictionary[match]}`;
-    });
-})();
+function displayDictionary() {
+    const q = searchEl.value.toLowerCase();
+    container.innerHTML = "";
+  
+    for (const cat in categories) {
+        const section = document.createElement("div");
+        section.className = "category-section";
+        const title = document.createElement("div");
+        title.className = "category-title";
+        title.textContent = cat;
+        section.appendChild(title);
+
+        let shown = false;
+
+        categories[cat].forEach(word => {
+            if (!dict[word]) return;
+            if (q && !word.toLowerCase().includes(q)) return;
+
+            const card = document.createElement("div");
+            card.className = "word-card";
+            card.innerHTML = `
+              <div class="word-main">${word} → <span class="word-translation">${dict[word]}</span></div>
+              <div class="word-desc">${descriptions[word] || "No description yet"}</div>
+            `;
+            section.appendChild(card);
+            shown = true;
+        });
+
+        if (shown) container.appendChild(section);
+    }
+}
 </script>
 
 </body>
