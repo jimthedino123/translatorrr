@@ -295,6 +295,35 @@ input[type="text"]:focus {
       </div>
     </div>
   </div>
+  <div class="dictionary-cta" onclick="window.location.href='https://nunuise.netlify.app'">
+  <span>📘 Press to visit the full dictionary</span>
+</div>
+
+<style>
+.dictionary-cta {
+  display: inline-block;
+  padding: 0.9rem 1.4rem;
+  background: #556cd6;
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.dictionary-cta:hover {
+  background: #465ad4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+.dictionary-cta:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+</style>
 </div>
 
   </div>
