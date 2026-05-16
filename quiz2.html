@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Núnúise Quiz</title>
+
+<style>
+    *{
+        box-sizing:border-box;
+        font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+        margin:0;
+        background:linear-gradient(135deg,#121212,#1f1f2f);
+        color:white;
+        padding:25px;
+    }
+
+    h1{
+        text-align:center;
+        margin-bottom:10px;
+        font-size:3rem;
+    }
+
+    .subtitle{
+        text-align:center;
+        opacity:0.8;
+        margin-bottom:30px;
+    }
+
+    .quiz-container{
+        max-width:950px;
+        margin:auto;
+    }
+
+    .question{
+        background:#23233a;
+        padding:22px;
+        margin-bottom:22px;
+        border-radius:18px;
+        box-shadow:0 0 15px rgba(0,0,0,0.25);
+    }
+
+    .question h2{
+        margin-top:0;
+        color:#b7b7ff;
+    }
+
+    .options{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+        margin-top:15px;
+    }
+
+    button.option-btn{
+        background:#313154;
+        border:none;
+        color:white;
+        padding:14px;
+        border-radius:12px;
+        cursor:pointer;
+        transition:0.2s;
+        text-align:left;
+        font-size:1rem;
+    }
+
+    button.option-btn:hover{
+        transform:scale(1.02);
+        background:#444470;
+    }
+
+    .correct{
+        background:#1e7d45 !important;
+    }
+
+    .wrong{
+        background:#9c2d2d !important;
+    }
+
+    input[type="text"]{
+        width:100%;
+        padding:14px;
+        border:none;
+        border-radius:12px;
+        margin-top:12px;
+        font-size:1rem;
+        background:#151525;
+        color:white;
+    }
+
+    .check-btn{
+        margin-top:12px;
+        background:#7066ff;
+        border:none;
+        color:white;
+        padding:12px 18px;
+        border-radius:12px;
+        cursor:pointer;
+        font-size:1rem;
+    }
+
+    .check-btn:hover{
+        background:#8d84ff;
+    }
+
+    .result{
+        margin-top:12px;
+        font-weight:bold;
+    }
+
+    .score-box{
+        position:sticky;
+        top:15px;
+        z-index:999;
+        background:#171727;
+        padding:14px;
+        border-radius:14px;
+        margin-bottom:25px;
+        text-align:center;
+        font-size:1.2rem;
+        border:2px solid #5d5dff;
+    }
+
+    .final-message{
+        margin-top:30px;
+        text-align:center;
+        font-size:1.5rem;
+        display:none;
+    }
+
+    .finish-btn{
+        display:block;
+        margin:30px auto;
+        padding:16px 28px;
+        border:none;
+        border-radius:14px;
+        background:#ff5db1;
+        color:white;
+        font-size:1.1rem;
+        cursor:pointer;
+    }
+
+    .finish-btn:hover{
+        background:#ff7fc2;
+    }
+
+    .tiny{
+        opacity:0.7;
+        font-size:0.9rem;
+        margin-top:6px;
+    }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+
+    <h1>Núnúise Quiz</h1>
+    <div class="subtitle">
+        Multiple Choice • Translation • Spelling Correction
+    </div>
+
+    <div class="score-box">
+        Score: <span id="score">0</span>
+    </div>
+
+    <!-- MULTIPLE CHOICE -->
+
+    <div class="question">
+        <h2>1. What does “Sela” mean?</h2>
+
+        <div class="options">
+            <button class="option-btn" data-correct="true">She</button>
+            <button class="option-btn">Food</button>
+            <button class="option-btn">Money</button>
+            <button class="option-btn">Friend</button>
+        </div>
+    </div>
+
+    <div class="question">
+        <h2>2. What is “Korin”?</h2>
+
+        <div class="options">
+            <button class="option-btn">Cheese</button>
+            <button class="option-btn" data-correct="true">Water / Drink</button>
+            <button class="option-btn">Cookie</button>
+            <button class="option-btn">Winter</button>
+        </div>
+    </div>
+
+    <div class="question">
+        <h2>3. Which word means “happy”?</h2>
+
+        <div class="options">
+            <button class="option-btn">Sir</button>
+            <button class="option-btn">Moren</button>
+            <button class="option-btn" data-correct="true">Lunira</button>
+            <button class="option-btn">Zavi</button>
+        </div>
+    </div>
+
+    <div class="question">
+        <h2>4. What does “Patee” mean?</h2>
+
+        <div class="options">
+            <button class="option-btn">Cake</button>
+            <button class="option-btn">Chicken</button>
+            <button class="option-btn" data-correct="true">Burger</button>
+            <button class="option-btn">Bread</button>
+        </div>
+    </div>
+
+    <div class="question">
+        <h2>5. Which word means “teacher”?</h2>
+
+        <div class="options">
+            <button class="option-btn">buk</button>
+            <button class="option-btn">tëëchër</button>
+            <button class="option-btn">learns</button>
+            <button class="option-btn">rool</button>
+        </div>
+    </div>
+
+    <!-- TRANSLATION -->
+
+    <div class="question">
+        <h2>6. Translate to Núnúise:</h2>
+        <p><strong>Hello</strong></p>
+
+        <input type="text" id="t1" placeholder="Type answer...">
+        <button class="check-btn" onclick="checkTranslation('t1',['sallo'])">Check</button>
+
+        <div class="result" id="r-t1"></div>
+    </div>
+
+    <div class="question">
+        <h2>7. Translate to English:</h2>
+        <p><strong>“Mavro”</strong></p>
+
+        <input type="text" id="t2" placeholder="Type answer...">
+        <button class="check-btn" onclick="checkTranslation('t2',['hungry'])">Check</button>
+
+        <div class="result" id="r-t2"></div>
+    </div>
+
+    <div class="question">
+        <h2>8. Translate to Núnúise:</h2>
+        <p><strong>Thank you</strong></p>
+
+        <input type="text" id="t3" placeholder="Type answer...">
+        <button class="check-btn" onclick="checkTranslation('t3',['taren'])">Check</button>
+
+        <div class="result" id="r-t3"></div>
+    </div>
+
+    <div class="question">
+        <h2>9. Translate to English:</h2>
+        <p><strong>“Buberrin”</strong></p>
+
+        <input type="text" id="t4" placeholder="Type answer...">
+        <button class="check-btn" onclick="checkTranslation('t4',['blueberry'])">Check</button>
+
+        <div class="result" id="r-t4"></div>
+    </div>
+
+    <div class="question">
+        <h2>10. Translate to Núnúise:</h2>
+        <p><strong>Friend</strong></p>
+
+        <input type="text" id="t5" placeholder="Type answer...">
+        <button class="check-btn" onclick="checkTranslation('t5',['mira'])">Check</button>
+
+        <div class="result" id="r-t5"></div>
+    </div>
+
+    <!-- SPELLING CORRECTION -->
+
+    <div class="question">
+        <h2>11. Correct the spelling:</h2>
+        <p><strong>“Spriwaser”</strong></p>
+        <div class="tiny">Hint: fizzy drink</div>
+
+        <input type="text" id="s1" placeholder="Correct spelling...">
+        <button class="check-btn" onclick="checkTranslation('s1',['spriwasser'])">Check</button>
+
+        <div class="result" id="r-s1"></div>
+    </div>
+
+    <div class="question">
+        <h2>12. Correct the spelling:</h2>
+        <p><strong>“Towfevy”</strong></p>
+        <div class="tiny">Hint: number</div>
+
+        <input type="text" id="s2" placeholder="Correct spelling...">
+        <button class="check-btn" onclick="checkTranslation('s2',['towfevi'])">Check</button>
+
+        <div class="result" id="r-s2"></div>
+    </div>
+
+    <div class="question">
+        <h2>13. Correct the spelling:</h2>
+        <p><strong>“Lunnira”</strong></p>
+        <div class="tiny">Hint: emotion</div>
+
+        <input type="text" id="s3" placeholder="Correct spelling...">
+        <button class="check-btn" onclick="checkTranslation('s3',['lunira'])">Check</button>
+
+        <div class="result" id="r-s3"></div>
+    </div>
+
+    <div class="question">
+        <h2>14. Correct the spelling:</h2>
+        <p><strong>“Polvay Nog”</strong></p>
+        <div class="tiny">Hint: food</div>
+
+        <input type="text" id="s4" placeholder="Correct spelling...">
+        <button class="check-btn" onclick="checkTranslation('s4',['polvé nog'])">Check</button>
+
+        <div class="result" id="r-s4"></div>
+    </div>
+
+    <button class="finish-btn" onclick="finishQuiz()">
+        Finish Quiz
+    </button>
+
+    <div class="final-message" id="finalMessage"></div>
+
+</div>
+
+<script>
+let score = 0;
+let answeredButtons = new Set();
+let answeredInputs = new Set();
+
+function updateScore(){
+    document.getElementById("score").innerText = score;
+}
+
+document.querySelectorAll(".option-btn").forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+        if(answeredButtons.has(btn.parentElement)){
+            return;
+        }
+
+        answeredButtons.add(btn.parentElement);
+
+        const buttons = btn.parentElement.querySelectorAll(".option-btn");
+
+        buttons.forEach(b => {
+            if(b.dataset.correct === "true"){
+                b.classList.add("correct");
+            }
+        });
+
+        if(btn.dataset.correct === "true"){
+            score++;
+            updateScore();
+        } else {
+            btn.classList.add("wrong");
+        }
+
+    });
+
+});
+
+function normalize(str){
+    return str
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+}
+
+function checkTranslation(inputId, answers){
+
+    if(answeredInputs.has(inputId)){
+        return;
+    }
+
+    const input = document.getElementById(inputId);
+    const result = document.getElementById("r-" + inputId);
+
+    const userAnswer = normalize(input.value);
+
+    const correct = answers.some(ans => normalize(ans) === userAnswer);
+
+    answeredInputs.add(inputId);
+
+    if(correct){
+        result.innerHTML = "✅ Correct!";
+        result.style.color = "#7dff9c";
+        score++;
+    } else {
+        result.innerHTML = "❌ Wrong! Correct answer: " + answers[0];
+        result.style.color = "#ff8c8c";
+    }
+
+    updateScore();
+}
+
+function finishQuiz(){
+
+    const total = 14;
+
+    const percent = Math.round((score / total) * 100);
+
+    let message = "";
+
+    if(percent >= 90){
+        message = "🌟 Núnúise Master!";
+    } else if(percent >= 70){
+        message = "🔥 Really good!";
+    } else if(percent >= 50){
+        message = "👍 Not bad!";
+    } else {
+        message = "📚 More practice needed!";
+    }
+
+    const final = document.getElementById("finalMessage");
+
+    final.style.display = "block";
+
+    final.innerHTML = `
+        You got <strong>${score}/${total}</strong> (${percent}%)
+        <br><br>
+        ${message}
+    `;
+}
+</script>
+
+</body>
+</html>
