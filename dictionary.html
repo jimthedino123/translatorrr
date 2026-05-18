@@ -4,250 +4,939 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Núnúise Dictionary</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f9faff;
-    margin: 0;
-    padding: 0;
-    color: #222;
-}
-header {
-    background: #556cd6;
-    padding: 1.5rem;
+  :root {
+    --sage-900: #1f2e26;
+    --sage-800: #2c3f33;
+    --sage-700: #3d5247;
+    --sage-600: #4f6b5c;
+    --sage-500: #637d6e;
+    --sage-400: #7a9485;
+    --sage-300: #a3bcaf;
+    --sage-200: #c8dbd1;
+    --sage-100: #e4efe9;
+    --sage-50:  #f2f7f4;
+    --cream-100: #faf7f0;
+    --cream-200: #f3ede0;
+    --cream-300: #e8dfc8;
+    --gold:      #a07840;
+    --gold-light:#c49a5a;
+    --text-dark: #1a2820;
+    --text-mid:  #3d5247;
+    --text-soft: #637d6e;
+    --text-muted:#8fa89a;
+    --nunuise-color: #3d5247;
+    --pron-color: #7a9485;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream-100);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--sage-700);
+    padding: 2.5rem 2rem 2rem;
     text-align: center;
-    color: white;
-}
-.search-box {
-    text-align: center;
-    margin: 2rem;
-}
-.search-box input {
-    width: 80%;
-    max-width: 480px;
-    padding: 0.75rem;
-    font-size: 1rem;
-    border: 2px solid #556cd6;
-    border-radius: 6px;
-}
-.category-section {
-    max-width: 900px;
-    margin: 1.5rem auto;
-    padding: 0 1rem;
-}
-.category-title {
-    font-size: 1.6rem;
-    color: #556cd6;
-    border-bottom: 2px solid #556cd6;
-    padding-bottom: 0.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 20px,
+      rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 21px
+    );
+  }
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: .18em;
     text-transform: uppercase;
-}
-.word-card {
+    color: var(--sage-300);
+    margin-bottom: .6rem;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 3.8rem);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -.01em;
+    line-height: 1;
+    margin-bottom: .5rem;
+  }
+  .header-subtitle {
+    font-size: .95rem;
+    color: var(--sage-200);
+    font-style: italic;
+    margin-bottom: 1.8rem;
+  }
+  .header-meta {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: .78rem;
+    color: var(--sage-300);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .05em;
+  }
+  .header-meta span { opacity: .7; }
+
+  /* ── RULES BANNER ── */
+  .rules-banner {
+    background: var(--sage-800);
+    padding: .75rem 2rem;
+    text-align: center;
+    font-size: .78rem;
+    color: var(--sage-200);
+    letter-spacing: .03em;
+    border-bottom: 1px solid var(--sage-600);
+  }
+  .rules-banner strong { color: var(--sage-100); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(242,247,244,.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--sage-200);
+    padding: .9rem 1.5rem;
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-wrap {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+  .search-wrap svg {
+    position: absolute; left: .75rem; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted); pointer-events: none;
+  }
+  #search {
+    width: 100%;
+    padding: .55rem .75rem .55rem 2.2rem;
+    border: 1.5px solid var(--sage-200);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .88rem;
     background: white;
-    border-radius: 6px;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color .2s;
+  }
+  #search:focus { border-color: var(--sage-500); }
+  #search::placeholder { color: var(--text-muted); }
+
+  .filter-tabs {
+    display: flex;
+    gap: .35rem;
+    flex-wrap: wrap;
+  }
+  .filter-tab {
+    padding: .35rem .75rem;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid var(--sage-200);
+    background: white;
+    color: var(--text-soft);
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .filter-tab:hover { border-color: var(--sage-400); color: var(--sage-700); }
+  .filter-tab.active { background: var(--sage-700); border-color: var(--sage-700); color: white; }
+
+  .view-toggle {
+    display: flex;
+    border: 1.5px solid var(--sage-200);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .view-btn {
+    padding: .4rem .65rem;
+    cursor: pointer;
+    border: none;
+    background: white;
+    color: var(--text-muted);
+    transition: all .15s;
+    display: flex; align-items: center;
+  }
+  .view-btn.active { background: var(--sage-700); color: white; }
+  .view-btn:first-child { border-right: 1px solid var(--sage-200); }
+
+  /* ── LETTER NAV ── */
+  .letter-nav {
+    display: flex;
+    gap: .25rem;
+    padding: .6rem 1.5rem;
+    flex-wrap: wrap;
+    background: var(--cream-200);
+    border-bottom: 1px solid var(--sage-100);
+  }
+  .letter-nav a {
+    font-family: 'DM Mono', monospace;
+    font-size: .75rem;
+    font-weight: 500;
+    padding: .2rem .45rem;
+    border-radius: 4px;
+    color: var(--text-soft);
+    text-decoration: none;
+    transition: all .15s;
+  }
+  .letter-nav a:hover { background: var(--sage-200); color: var(--sage-700); }
+  .letter-nav a.has-entries { color: var(--sage-700); }
+
+  /* ── MAIN CONTENT ── */
+  .main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem; }
+
+  /* ── RESULT COUNT ── */
+  .result-count {
+    font-size: .8rem;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    padding: .5rem 0 1rem;
+  }
+
+  /* ── LETTER SECTION ── */
+  .letter-section { margin-bottom: 2rem; }
+  .letter-heading {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: .75rem;
+  }
+  .letter-glyph {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--sage-700);
+    line-height: 1;
+    width: 2.5rem;
+    text-align: center;
+  }
+  .letter-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--sage-200), transparent);
+  }
+  .letter-count {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    color: var(--text-muted);
+  }
+
+  /* ── TABLE VIEW ── */
+  .dict-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .dict-table thead tr {
+    background: var(--sage-700);
+  }
+  .dict-table thead th {
+    padding: .6rem .9rem;
+    text-align: left;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--sage-100);
+  }
+  .dict-table tbody tr {
+    border-bottom: 1px solid var(--sage-50);
+    transition: background .12s;
+  }
+  .dict-table tbody tr:last-child { border-bottom: none; }
+  .dict-table tbody tr:nth-child(even) { background: var(--sage-50); }
+  .dict-table tbody tr:hover { background: var(--sage-100); }
+  .dict-table td { padding: .55rem .9rem; vertical-align: top; }
+  .td-en {
+    font-weight: 600;
+    font-size: .88rem;
+    color: var(--text-dark);
+    min-width: 110px;
+  }
+  .td-nun {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: .95rem;
+    color: var(--nunuise-color);
+    min-width: 120px;
+  }
+  .td-pron {
+    font-family: 'DM Mono', monospace;
+    font-size: .72rem;
+    color: var(--pron-color);
+    min-width: 100px;
+  }
+  .td-def {
+    font-size: .78rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+
+  /* ── CARD VIEW ── */
+  .dict-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: .75rem;
+  }
+  .dict-card {
+    background: white;
+    border-radius: 12px;
     padding: 1rem;
-    margin: 0.75rem 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-}
-.word-main {
-    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    border: 1.5px solid var(--sage-100);
+    transition: all .15s;
+    cursor: default;
+  }
+  .dict-card:hover {
+    border-color: var(--sage-300);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(61,82,71,.1);
+  }
+  .card-en {
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--text-dark);
+    margin-bottom: .35rem;
+  }
+  .card-nun {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
     font-size: 1.15rem;
-}
-.word-translation {
-    color: #556cd6;
-}
-.word-desc {
-    margin-top: 0.4rem;
-    font-size: 0.95rem;
-    opacity: 0.9;
-}
+    color: var(--nunuise-color);
+    margin-bottom: .25rem;
+  }
+  .card-pron {
+    font-family: 'DM Mono', monospace;
+    font-size: .68rem;
+    color: var(--pron-color);
+    margin-bottom: .45rem;
+  }
+  .card-def {
+    font-size: .75rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+    border-top: 1px solid var(--sage-100);
+    padding-top: .45rem;
+    margin-top: .35rem;
+  }
+
+  /* ── NO RESULTS ── */
+  .no-results {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-muted);
+  }
+  .no-results-icon { font-size: 2.5rem; margin-bottom: .75rem; }
+  .no-results p { font-size: .9rem; }
+
+  /* ── NUMBERS PAGE ── */
+  .numbers-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    border: 1.5px solid var(--sage-100);
+  }
+  .numbers-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--sage-700);
+    margin-bottom: .5rem;
+  }
+  .numbers-intro {
+    font-size: .85rem;
+    color: var(--text-soft);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    padding: .8rem 1rem;
+    background: var(--sage-50);
+    border-left: 3px solid var(--sage-400);
+    border-radius: 0 8px 8px 0;
+  }
+  .numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: .5rem;
+  }
+  .num-card {
+    background: var(--cream-100);
+    border: 1px solid var(--sage-100);
+    border-radius: 8px;
+    padding: .6rem .8rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+  }
+  .num-digit {
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--sage-400);
+    min-width: 28px;
+    text-align: right;
+  }
+  .num-info { flex: 1; }
+  .num-word { font-size: .78rem; color: var(--text-muted); }
+  .num-nun {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: .95rem;
+    color: var(--nunuise-color);
+  }
+  .num-pron {
+    font-family: 'DM Mono', monospace;
+    font-size: .62rem;
+    color: var(--pron-color);
+  }
+
+  /* ── PHRASES PAGE ── */
+  .phrase-cat {
+    margin-bottom: 1.75rem;
+  }
+  .phrase-cat-title {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--sage-500);
+    padding: .4rem .75rem;
+    background: var(--sage-100);
+    border-radius: 6px;
+    margin-bottom: .75rem;
+    display: inline-block;
+  }
+  .phrase-row {
+    background: white;
+    border: 1.5px solid var(--sage-100);
+    border-radius: 10px;
+    padding: .85rem 1rem;
+    margin-bottom: .5rem;
+    transition: border-color .15s;
+  }
+  .phrase-row:hover { border-color: var(--sage-300); }
+  .phrase-en { font-size: .85rem; color: var(--text-muted); margin-bottom: .25rem; }
+  .phrase-nun {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--nunuise-color);
+    margin-bottom: .2rem;
+  }
+  .phrase-pron {
+    font-family: 'DM Mono', monospace;
+    font-size: .68rem;
+    color: var(--pron-color);
+  }
+
+  /* ── PAGE TABS ── */
+  .page-tabs {
+    background: var(--sage-800);
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    padding: 0 1.5rem;
+  }
+  .page-tab {
+    padding: .7rem 1.25rem;
+    font-size: .82rem;
+    font-weight: 500;
+    color: var(--sage-300);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all .15s;
+    user-select: none;
+  }
+  .page-tab:hover { color: var(--sage-100); }
+  .page-tab.active { color: white; border-bottom-color: var(--sage-300); }
+
+  /* ── PAGE SECTIONS ── */
+  .page-section { display: none; }
+  .page-section.active { display: block; }
+
+  /* ── CONVO ── */
+  .convo-wrap {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    border: 1.5px solid var(--sage-100);
+  }
+  .convo-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--sage-700);
+    margin-bottom: 1rem;
+    padding-bottom: .6rem;
+    border-bottom: 1px solid var(--sage-100);
+  }
+  .convo-line { display: flex; gap: .75rem; margin-bottom: .85rem; align-items: flex-start; }
+  .convo-speaker {
+    font-family: 'DM Mono', monospace;
+    font-size: .7rem;
+    font-weight: 600;
+    color: white;
+    background: var(--sage-600);
+    padding: .2rem .5rem;
+    border-radius: 4px;
+    min-width: 52px;
+    text-align: center;
+    margin-top: .2rem;
+  }
+  .convo-speaker.b { background: var(--sage-400); }
+  .convo-content { flex: 1; }
+  .convo-nun {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--nunuise-color);
+    margin-bottom: .1rem;
+  }
+  .convo-en { font-size: .78rem; color: var(--text-muted); margin-bottom: .1rem; }
+  .convo-pron { font-family: 'DM Mono', monospace; font-size: .65rem; color: var(--pron-color); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    background: var(--sage-800);
+    color: var(--sage-400);
+    font-size: .78rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .05em;
+  }
+
+  /* ── HIGHLIGHT ── */
+  mark { background: rgba(160,120,64,.2); color: inherit; border-radius: 2px; }
+
+  @media (max-width: 600px) {
+    .dict-table thead th:nth-child(4), .dict-table td:nth-child(4) { display: none; }
+    .dict-cards { grid-template-columns: 1fr 1fr; }
+    .header-title { font-size: 2rem; }
+  }
 </style>
 </head>
 <body>
 
-<header>
-    <h1>Núnúise Dictionary</h1>
-    <p>Search and explore Núnúise words with categories</p>
+<header class="site-header">
+  <div class="header-eyebrow">English → Núnúise</div>
+  <h1 class="header-title">NÚNÚISE</h1>
+  <p class="header-subtitle">A secret language · © Tilly &amp; Tyler</p>
+  <div class="header-meta">
+    <span id="entry-count">211 entries</span>
+    <span>·</span>
+    <span>With pronunciations &amp; definitions</span>
+    <span>·</span>
+    <span>A living language</span>
+  </div>
 </header>
 
-<div class="search-box">
-    <input type="text" id="search" placeholder="Search any English word...">
+<div class="rules-banner">
+  <strong>Capitalisation rules:</strong>
+  Pronouns (Ti, Mei, Mein, Ü, Sela, Viro, Ota…) ·
+  All adjectives &amp; adverbs (Fay, Rillin, Veerin, Kwyt, Noë, Mavro…) ·
+  Proper names (Nilly, Nyler, Posey…) ·
+  Nouns stay lowercase unless proper
 </div>
 
-<div id="dictionary"></div>
+<nav class="page-tabs">
+  <div class="page-tab active" data-page="dictionary">📖 Dictionary</div>
+  <div class="page-tab" data-page="numbers">🔢 Numbers</div>
+  <div class="page-tab" data-page="phrases">💬 Phrases</div>
+  <div class="page-tab" data-page="conversations">🗣 Conversations</div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════
+     DICTIONARY PAGE
+══════════════════════════════════════════════════ -->
+<div class="page-section active" id="page-dictionary">
+
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search" placeholder="Search English or Núnúise…" autocomplete="off">
+    </div>
+    <div class="filter-tabs" id="filter-tabs">
+      <div class="filter-tab active" data-filter="all">All</div>
+      <div class="filter-tab" data-filter="adj">Adjectives</div>
+      <div class="filter-tab" data-filter="pronoun">Pronouns</div>
+      <div class="filter-tab" data-filter="verb">Verbs</div>
+      <div class="filter-tab" data-filter="food">Food &amp; Drink</div>
+      <div class="filter-tab" data-filter="feeling">Feelings</div>
+      <div class="filter-tab" data-filter="school">School</div>
+      <div class="filter-tab" data-filter="number">Numbers</div>
+      <div class="filter-tab" data-filter="name">Names</div>
+    </div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="btn-table" title="Table view">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+      </button>
+      <button class="view-btn" id="btn-cards" title="Card view">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <nav class="letter-nav" id="letter-nav"></nav>
+
+  <div class="main">
+    <div class="result-count" id="result-count"></div>
+    <div id="dict-output"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     NUMBERS PAGE
+══════════════════════════════════════════════════ -->
+<div class="page-section" id="page-numbers">
+  <div class="main">
+    <div class="numbers-section">
+      <h2>Niflarin · Numbers</h2>
+      <div class="numbers-intro">
+        Núnúise uses a building-block system. <strong>Teens</strong> are net (ten) + unit: netnoe = 11, nettow = 12.
+        <strong>Twenty</strong> is towozer (two + zero); from 21 drop the zero: townoe, towtow… townein.
+        <strong>Thirty</strong> is rheetozer; thirty-one is rheetozernoe.
+        <strong>Dates</strong> use day/month/year: noe/netnoe/[year] = 1st November.
+      </div>
+      <div class="numbers-grid" id="numbers-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PHRASES PAGE
+══════════════════════════════════════════════════ -->
+<div class="page-section" id="page-phrases">
+  <div class="main" id="phrases-output"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CONVERSATIONS PAGE
+══════════════════════════════════════════════════ -->
+<div class="page-section" id="page-conversations">
+  <div class="main" id="convos-output"></div>
+</div>
+
+<footer>Núnúise · © Tilly &amp; Tyler · A living language, always growing</footer>
 
 <script>
-const categories = {
-    "Pronouns": ["she","her","he","him","i","it","its","you","his"],
-    "Greetings": ["hello","hi","hey","bye","goodbye","please","thank you","okay","yay"],
-    "Basics": ["yes","no","and","but","are","because","the","a","an","with"],
-    "Emotions": ["happy","sad","excitement","sadness","fear","awkwardness","thirsty","hungry"],
-    "Food & Drink": ["food","water","drink","cheese","bread","chips","crisps","gum",
-                     "sparkling water","coca cola","dr pepper","sprite","yummy",
-                     "spicy","sour","apple","blueberry","chicken","burger","salad",
-                     "ketchup","mayonnaise","onion rings","prawn","hot chocolate",
-                     "ice","cream","cookie","cupcake","cake"],
-    "Actions": ["do","don’t","want","can","should","need","go","talking","love","have","hate","like","stop"],
-    "School": ["lessons","english","maths","science","teacher","art","book","equipment","pen","pencil","ruler"],
-    "Seasons & Nature": ["day","night","autumn","spring","summer","winter","leaf","leaves"],
-    "Other": ["luck","friend","idiot","fuck","smelly","cold","thick","rockhead","rockheaded"]
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const DICT = [{"english":"a","nunuise":"un","pronunciation":"un","definition":"Indefinite article"},{"english":"also","nunuise":"jün","pronunciation":"yoon","definition":"In addition; as well"},{"english":"an","nunuise":"un","pronunciation":"un","definition":"Indefinite article (before vowel sounds)"},{"english":"and","nunuise":"jün","pronunciation":"yoon","definition":"Used to join words or clauses"},{"english":"angry","nunuise":"Gângy","pronunciation":"GAHN-gee","definition":"Adjective: feeling strong displeasure or rage"},{"english":"anxiousness","nunuise":"sir","pronunciation":"seer","definition":"A feeling of worry or unease"},{"english":"apple","nunuise":"Oplé","pronunciation":"op-LAY","definition":"A round fruit, typically red or green"},{"english":"are","nunuise":"ar","pronunciation":"ar","definition":"Plural/second-person form of 'be'"},{"english":"art","nunuise":"kreativee","pronunciation":"kre-AH-tee-vee","definition":"The expression of creative skill"},{"english":"autumn","nunuise":"evétorl","pronunciation":"ev-AY-torl","definition":"The season between summer and winter"},{"english":"awkwardness","nunuise":"clob/beep","pronunciation":"KLOB / BEEP","definition":"Social discomfort; uneasy silence"},{"english":"bad","nunuise":"Yaf","pronunciation":"yaf","definition":"Adjective: of poor quality; not good"},{"english":"because","nunuise":"bcu","pronunciation":"BEH-kyoo","definition":"For the reason that"},{"english":"being","nunuise":"osaing","pronunciation":"OH-sah-ing","definition":"Present participle of 'be'"},{"english":"big","nunuise":"Groe","pronunciation":"groh","definition":"Adjective: of large size or extent"},{"english":"blueberry","nunuise":"Buberrin","pronunciation":"boo-BEHR-in","definition":"A small sweet dark-blue berry"},{"english":"book","nunuise":"buk","pronunciation":"buk","definition":"A written or printed work"},{"english":"bread","nunuise":"Bonn","pronunciation":"bon","definition":"A baked food made from flour"},{"english":"burger","nunuise":"Patee","pronunciation":"PAH-tee","definition":"A patty in a bread bun"},{"english":"bus","nunuise":"süb","pronunciation":"soob","definition":"A large road vehicle for passengers"},{"english":"but","nunuise":"tav","pronunciation":"tav","definition":"Used to introduce a contrast"},{"english":"bye","nunuise":"navin","pronunciation":"NAH-vin","definition":"An informal farewell"},{"english":"cake","nunuise":"torta","pronunciation":"TOR-tah","definition":"A sweet baked dessert"},{"english":"can","nunuise":"kap","pronunciation":"kap","definition":"To be able to; have the ability"},{"english":"can't","nunuise":"kap't","pronunciation":"kap't","definition":"Contraction of 'cannot'"},{"english":"cash","nunuise":"kash","pronunciation":"kash","definition":"Money in coins or notes"},{"english":"cheese","nunuise":"Kaw","pronunciation":"kaw","definition":"A food made from pressed milk curds"},{"english":"chicken","nunuise":"Polvé","pronunciation":"pol-VAY","definition":"A common poultry bird; its meat"},{"english":"chicken nugget","nunuise":"Polvé Nog","pronunciation":"pol-VAY NOG","definition":"A breaded piece of fried chicken"},{"english":"chips","nunuise":"pota","pronunciation":"POH-tah","definition":"Fried potato strips — UK thick-cut"},{"english":"chocolate","nunuise":"chovra","pronunciation":"CHOV-rah","definition":"A sweet food made from cacao"},{"english":"coca cola","nunuise":"sprikok","pronunciation":"spree-KOK","definition":"A fizzy cola drink"},{"english":"cocktail","nunuise":"ono","pronunciation":"OH-no","definition":"A mixed drink; or a prawn cocktail"},{"english":"cold","nunuise":"Kalt","pronunciation":"kalt","definition":"Adjective: low in temperature"},{"english":"cookie","nunuise":"cookie","pronunciation":"KOOK-ee","definition":"A sweet baked biscuit"},{"english":"cream","nunuise":"créme","pronunciation":"krehm","definition":"The thick fatty part of milk; a topping"},{"english":"crisps","nunuise":"cribs","pronunciation":"kribz","definition":"Thin sliced fried potato snacks"},{"english":"cupcake","nunuise":"tortanoe","pronunciation":"tor-tah-NOH","definition":"A small individual cake"},{"english":"day","nunuise":"daren","pronunciation":"DAH-ren","definition":"The period of light between sunrise and sunset"},{"english":"dislike","nunuise":"desloik","pronunciation":"des-LOYK","definition":"To find unpleasant; mild hatred"},{"english":"disliking","nunuise":"desloiking","pronunciation":"des-LOYK-ing","definition":"Present participle of 'dislike'"},{"english":"do","nunuise":"dro","pronunciation":"droh","definition":"To perform an action"},{"english":"doing","nunuise":"droing","pronunciation":"DROH-ing","definition":"Present participle of 'do'"},{"english":"don't","nunuise":"dron","pronunciation":"dron","definition":"Contraction of 'do not'"},{"english":"dough","nunuise":"douven","pronunciation":"DOO-ven","definition":"Unbaked mixture of flour and liquid"},{"english":"dr pepper","nunuise":"spripepper DR","pronunciation":"spree-PEP-er DR","definition":"A fizzy spiced soft drink"},{"english":"drink","nunuise":"Korin","pronunciation":"KOR-in","definition":"A liquid consumed; to consume liquid"},{"english":"drinking","nunuise":"Korinning","pronunciation":"KOR-in-ing","definition":"Present participle of 'drink'"},{"english":"dt","nunuise":"desyn-tekologee","pronunciation":"deh-ZIN tek-oh-LOH-gee","definition":"Design & Technology school subject"},{"english":"eight","nunuise":"tiegh","pronunciation":"ty","definition":"The number 8"},{"english":"eighteen","nunuise":"nettiegh","pronunciation":"net-TY","definition":"The number 18"},{"english":"eleven","nunuise":"netnoe","pronunciation":"net-NOH","definition":"The number 11 — ten + one"},{"english":"english","nunuise":"önglish","pronunciation":"UN-glish","definition":"The English language or subject"},{"english":"equipment","nunuise":"eqiptment","pronunciation":"eh-KIPT-ment","definition":"Tools or items needed for a task"},{"english":"excitement","nunuise":"Vetra","pronunciation":"VET-rah","definition":"A feeling of eager enthusiasm"},{"english":"fall","nunuise":"orl","pronunciation":"orl","definition":"Season after summer; also: to drop"},{"english":"favourite","nunuise":"Fivrat","pronunciation":"FIV-rat","definition":"Adjective: most preferred; liked above all others"},{"english":"fear","nunuise":"sir","pronunciation":"seer","definition":"An unpleasant emotion from danger"},{"english":"fifteen","nunuise":"netfevi","pronunciation":"net-FEH-vee","definition":"The number 15"},{"english":"five","nunuise":"fevi","pronunciation":"FEH-vee","definition":"The number 5"},{"english":"food","nunuise":"Kora","pronunciation":"KOR-ah","definition":"Sustenance consumed for energy"},{"english":"four","nunuise":"oruf","pronunciation":"OH-ruf","definition":"The number 4"},{"english":"fourteen","nunuise":"netoruf","pronunciation":"net-OH-ruf","definition":"The number 14"},{"english":"friend","nunuise":"mira","pronunciation":"MEER-ah","definition":"A person you are fond of; a companion"},{"english":"fries","nunuise":"pota","pronunciation":"POH-tah","definition":"Thin fried potato strips — US term"},{"english":"fuck","nunuise":"flunge-on","pronunciation":"FLUNJ-on","definition":"A strong expletive — use sparingly!"},{"english":"go","nunuise":"og","pronunciation":"og","definition":"To move or travel somewhere"},{"english":"going","nunuise":"oging","pronunciation":"OG-ing","definition":"Present participle of 'go'"},{"english":"good","nunuise":"Fay","pronunciation":"fay","definition":"Adjective: of high quality; satisfactory"},{"english":"goodbye","nunuise":"luninavin","pronunciation":"loo-nee-NAH-vin","definition":"A formal farewell"},{"english":"grape","nunuise":"Grivine","pronunciation":"grih-VEEN","definition":"A small sweet fruit growing in clusters"},{"english":"great","nunuise":"Fay","pronunciation":"fay","definition":"Adjective: excellent; above average"},{"english":"gross","nunuise":"Eugus","pronunciation":"OY-gus","definition":"Adjective: disgusting; revolting"},{"english":"gum","nunuise":"chöw","pronunciation":"chuh","definition":"A chewy substance for the mouth"},{"english":"happy","nunuise":"Lunira","pronunciation":"loo-NEER-ah","definition":"Adjective: feeling or showing pleasure"},{"english":"hate","nunuise":"haet","pronunciation":"hayt","definition":"To feel intense dislike"},{"english":"hating","nunuise":"haeting","pronunciation":"HAYT-ing","definition":"Present participle of 'hate'"},{"english":"have","nunuise":"have","pronunciation":"hav","definition":"To possess or hold"},{"english":"having","nunuise":"haveing","pronunciation":"HAV-ing","definition":"Present participle of 'have'"},{"english":"he","nunuise":"Viro","pronunciation":"VEE-roh","definition":"Third person singular masculine pronoun"},{"english":"head","nunuise":"häd","pronunciation":"had","definition":"The part of the body above the neck"},{"english":"heart","nunuise":"bumbum","pronunciation":"BUM-bum","definition":"The organ that pumps blood; love symbol"},{"english":"hello","nunuise":"sallo","pronunciation":"SAL-oh","definition":"A standard greeting"},{"english":"her","nunuise":"Selam","pronunciation":"SEH-lam","definition":"Objective/possessive form of 'she'"},{"english":"hey","nunuise":"ollo","pronunciation":"OL-oh","definition":"An informal greeting or exclamation"},{"english":"hi","nunuise":"ollo","pronunciation":"OL-oh","definition":"A casual informal greeting"},{"english":"him","nunuise":"Virem","pronunciation":"VEE-rem","definition":"Objective form of 'he'"},{"english":"his","nunuise":"virem","pronunciation":"VEE-rem","definition":"Possessive form of 'he'"},{"english":"hot","nunuise":"Hët","pronunciation":"het","definition":"Adjective: high in temperature"},{"english":"hot chocolate","nunuise":"hët chovra","pronunciation":"HET CHOV-rah","definition":"A warm drink made with chocolate"},{"english":"hungry","nunuise":"Mavro","pronunciation":"MAV-roh","definition":"Adjective: feeling a need for food"},{"english":"i","nunuise":"Ti","pronunciation":"tee","definition":"First person singular pronoun"},{"english":"i'm","nunuise":"I'm","pronunciation":"I'm","definition":"Contraction of 'I am'"},{"english":"ice","nunuise":"glassa","pronunciation":"GLAS-ah","definition":"Frozen water"},{"english":"idiot","nunuise":"monologue","pronunciation":"MON-oh-log","definition":"A foolish or stupid person (insult)"},{"english":"is","nunuise":"osa","pronunciation":"OH-sah","definition":"Third person singular present of 'be'"},{"english":"isabella","nunuise":"Cheryl","pronunciation":"CHEH-ril","definition":"Personal name — Núnúise form"},{"english":"it","nunuise":"Ota","pronunciation":"OH-tah","definition":"Third person singular neuter pronoun"},{"english":"it's","nunuise":"oti","pronunciation":"OH-tee","definition":"Contraction of 'it is'"},{"english":"its","nunuise":"oti","pronunciation":"OH-tee","definition":"Possessive form of 'it'"},{"english":"jealous","nunuise":"Jolus","pronunciation":"JOH-lus","definition":"Adjective: feeling envy or resentment"},{"english":"jealousy","nunuise":"Jolusé","pronunciation":"joh-LOO-say","definition":"The state of feeling jealous"},{"english":"ketchup","nunuise":"Tomken","pronunciation":"TOM-ken","definition":"A tomato-based sauce condiment"},{"english":"leaf","nunuise":"evét","pronunciation":"eh-VAY","definition":"A flat green part of a plant"},{"english":"leaves","nunuise":"evéts","pronunciation":"eh-VAYTS","definition":"Plural of leaf; also: to depart"},{"english":"lessons","nunuise":"learns","pronunciation":"lernz","definition":"Periods of instruction at school"},{"english":"lettuce","nunuise":"tutce","pronunciation":"TUT-see","definition":"A leafy green salad vegetable"},{"english":"like","nunuise":"loik","pronunciation":"loyk","definition":"To find pleasant; similar to"},{"english":"liking","nunuise":"loiking","pronunciation":"LOYK-ing","definition":"Present participle of 'like'"},{"english":"little","nunuise":"Noë","pronunciation":"noh-eh","definition":"Adjective: small in size or amount"},{"english":"love","nunuise":"loik","pronunciation":"loyk","definition":"Deep affection (shares word with 'like')"},{"english":"loving","nunuise":"loiking","pronunciation":"LOYK-ing","definition":"Present participle of 'love'"},{"english":"luck","nunuise":"nuck","pronunciation":"nuk","definition":"Success or fortune by chance"},{"english":"many","nunuise":"Shün","pronunciation":"shoon","definition":"Adjective: a large number of; a lot"},{"english":"many-thanks","nunuise":"tarenshün","pronunciation":"TAH-ren-shoon","definition":"A warm, emphatic thank you"},{"english":"maths","nunuise":"matti","pronunciation":"MAT-ee","definition":"The school subject of mathematics"},{"english":"mayonnaise","nunuise":"Mayken","pronunciation":"MAY-ken","definition":"A creamy white condiment"},{"english":"me","nunuise":"Mei","pronunciation":"may","definition":"Objective form of 'I'"},{"english":"money","nunuise":"kash","pronunciation":"kash","definition":"Currency used for transactions"},{"english":"my","nunuise":"mein","pronunciation":"mayn","definition":"Possessive form of 'I'"},{"english":"need","nunuise":"jeve","pronunciation":"JEH-veh","definition":"To require something essential"},{"english":"needing","nunuise":"jeveing","pronunciation":"JEH-veh-ing","definition":"Present participle of 'need'"},{"english":"night","nunuise":"naren","pronunciation":"NAH-ren","definition":"The dark period after sunset"},{"english":"nine","nunuise":"nein","pronunciation":"nayn","definition":"The number 9"},{"english":"nineteen","nunuise":"netnein","pronunciation":"net-NAYN","definition":"The number 19"},{"english":"no","nunuise":"nahr","pronunciation":"nahr","definition":"A negative response; refusal"},{"english":"nugget","nunuise":"Nog","pronunciation":"nog","definition":"A small lump; a chicken nugget piece"},{"english":"number","nunuise":"nilflarin","pronunciation":"nil-FLAH-rin","definition":"A single numeral"},{"english":"numbers","nunuise":"niflarin","pronunciation":"nif-LAH-rin","definition":"The counting system in Núnúise"},{"english":"oh no","nunuise":"shavi","pronunciation":"SHAH-vee","definition":"An exclamation of dismay"},{"english":"okay","nunuise":"vera","pronunciation":"VEH-rah","definition":"Acceptable; expression of agreement"},{"english":"one","nunuise":"noe","pronunciation":"noh","definition":"The number 1"},{"english":"onion","nunuise":"Onra","pronunciation":"ON-rah","definition":"A pungent bulb vegetable"},{"english":"onion rings","nunuise":"onra ain","pronunciation":"ON-rah AYN","definition":"Battered and fried onion circles"},{"english":"pen","nunuise":"pón","pronunciation":"pon","definition":"An ink-based writing instrument"},{"english":"pencil","nunuise":"póncil","pronunciation":"PON-sil","definition":"A graphite writing instrument"},{"english":"please","nunuise":"taru","pronunciation":"TAH-roo","definition":"A polite word used in requests"},{"english":"prawn","nunuise":"prav","pronunciation":"prav","definition":"A small edible crustacean"},{"english":"quite","nunuise":"Kwyt","pronunciation":"kwyt","definition":"Adverb: to a moderate degree; fairly"},{"english":"really","nunuise":"Rillin","pronunciation":"RIL-in","definition":"Adverb: to a great degree; truly"},{"english":"rings","nunuise":"ain","pronunciation":"ayn","definition":"Circular shapes; onion rings"},{"english":"rockhead","nunuise":"ruzgik","pronunciation":"ROOZ-gik","definition":"A stubborn or dense person (insult)"},{"english":"rockheaded","nunuise":"Ruzhargic","pronunciation":"rooz-HAR-jik","definition":"Adjective: stubbornly thick-headed"},{"english":"ruler","nunuise":"rool","pronunciation":"rool","definition":"A straight measuring instrument"},{"english":"sad","nunuise":"Zavi","pronunciation":"ZAH-vee","definition":"Adjective: feeling unhappy or sorrowful"},{"english":"sadness","nunuise":"moren","pronunciation":"MOR-en","definition":"The state of being sad"},{"english":"salad","nunuise":"Salken","pronunciation":"SAL-ken","definition":"A dish of mixed raw vegetables"},{"english":"science","nunuise":"seauncé","pronunciation":"SEE-on-say","definition":"Study of the natural world"},{"english":"seven","nunuise":"nesev","pronunciation":"NEH-sev","definition":"The number 7"},{"english":"seventeen","nunuise":"netnesev","pronunciation":"net-NEH-sev","definition":"The number 17"},{"english":"she","nunuise":"Sela","pronunciation":"SEH-lah","definition":"Third person singular feminine pronoun"},{"english":"shock","nunuise":"Huah","pronunciation":"hwah","definition":"A sudden feeling of surprise or distress"},{"english":"shocked","nunuise":"Huah'd","pronunciation":"hwahd","definition":"Adjective: feeling sudden surprise or distress"},{"english":"should","nunuise":"ferd","pronunciation":"ferd","definition":"Expressing obligation or expectation"},{"english":"six","nunuise":"xis","pronunciation":"zis","definition":"The number 6"},{"english":"sixteen","nunuise":"netxis","pronunciation":"net-ZIS","definition":"The number 16"},{"english":"smelly","nunuise":"Ón","pronunciation":"on","definition":"Adjective: having an unpleasant odour"},{"english":"smith","nunuise":"Nith","pronunciation":"nith","definition":"Surname — Núnúise form"},{"english":"sour","nunuise":"Sór","pronunciation":"sor","definition":"Adjective: having an acidic taste"},{"english":"sparkling water","nunuise":"spriwasser","pronunciation":"spree-WAS-er","definition":"Carbonated water"},{"english":"spicy","nunuise":"Piko","pronunciation":"PEE-koh","definition":"Adjective: having a strong hot flavour"},{"english":"spring","nunuise":"noedaren","pronunciation":"noh-DAH-ren","definition":"The season of new growth"},{"english":"sprite","nunuise":"sprise","pronunciation":"sprees","definition":"A fizzy lemon-lime soft drink"},{"english":"stop","nunuise":"pöts","pronunciation":"puts","definition":"To cease doing something"},{"english":"stopping","nunuise":"pötsing","pronunciation":"PUTS-ing","definition":"Present participle of 'stop'"},{"english":"strawberry","nunuise":"berrin","pronunciation":"BEH-rin","definition":"A sweet red fruit"},{"english":"summer","nunuise":"grodaren","pronunciation":"groh-DAH-ren","definition":"The warmest season of the year"},{"english":"talking","nunuise":"nibble nabbling","pronunciation":"NIB-ul NAB-ling","definition":"The act of speaking or chatting"},{"english":"teacher","nunuise":"tëëchër","pronunciation":"TEE-cher","definition":"A person who instructs others"},{"english":"teehee","nunuise":"snivvi","pronunciation":"SNIV-ee","definition":"A small giggle or cheeky laugh"},{"english":"ten","nunuise":"net","pronunciation":"net","definition":"The number 10"},{"english":"thank you","nunuise":"taren","pronunciation":"TAH-ren","definition":"An expression of gratitude"},{"english":"the","nunuise":"es","pronunciation":"es","definition":"Definite article"},{"english":"thick","nunuise":"Pluz","pronunciation":"pluz","definition":"Adjective: slow-witted; dense"},{"english":"thirsty","nunuise":"Selin","pronunciation":"SEH-lin","definition":"Adjective: feeling the need to drink"},{"english":"thirteen","nunuise":"netrheet","pronunciation":"net-REET","definition":"The number 13"},{"english":"thirty","nunuise":"rheetozer","pronunciation":"reet-OH-zer","definition":"The number 30 — three + zero"},{"english":"thirty-one","nunuise":"rheetozernoe","pronunciation":"reet-OH-zer-NOH","definition":"The number 31"},{"english":"three","nunuise":"rheet","pronunciation":"reet","definition":"The number 3"},{"english":"tilly","nunuise":"Nilly","pronunciation":"NIL-ee","definition":"Personal name — Núnúise form"},{"english":"to","nunuise":"ot","pronunciation":"ot","definition":"Preposition indicating direction or purpose"},{"english":"too","nunuise":"oot","pronunciation":"oot","definition":"Also; in addition; excessively"},{"english":"trin","nunuise":"Posey","pronunciation":"POH-zee","definition":"Personal name — Núnúise form"},{"english":"twelve","nunuise":"nettow","pronunciation":"net-TOW","definition":"The number 12 — ten + two"},{"english":"twenty","nunuise":"towozer","pronunciation":"tow-OH-zer","definition":"The number 20 — two + zero"},{"english":"twenty-eight","nunuise":"towtiegh","pronunciation":"tow-TY","definition":"The number 28"},{"english":"twenty-five","nunuise":"towfevi","pronunciation":"tow-FEH-vee","definition":"The number 25"},{"english":"twenty-four","nunuise":"toworuf","pronunciation":"tow-OH-ruf","definition":"The number 24"},{"english":"twenty-nine","nunuise":"townein","pronunciation":"tow-NAYN","definition":"The number 29"},{"english":"twenty-one","nunuise":"townoe","pronunciation":"tow-NOH","definition":"The number 21"},{"english":"twenty-seven","nunuise":"townesev","pronunciation":"tow-NEH-sev","definition":"The number 27"},{"english":"twenty-six","nunuise":"towxis","pronunciation":"tow-ZIS","definition":"The number 26"},{"english":"twenty-three","nunuise":"towrheet","pronunciation":"tow-REET","definition":"The number 23"},{"english":"twenty-two","nunuise":"towtow","pronunciation":"tow-TOW","definition":"The number 22"},{"english":"two","nunuise":"tow","pronunciation":"tow","definition":"The number 2"},{"english":"tyler","nunuise":"Nyler","pronunciation":"NY-ler","definition":"Personal name — Núnúise form"},{"english":"very","nunuise":"Veerin","pronunciation":"VEER-in","definition":"Adverb: to a high degree; extremely"},{"english":"want","nunuise":"frenk","pronunciation":"frenk","definition":"To desire or wish for something"},{"english":"wanting","nunuise":"frenking","pronunciation":"FRENK-ing","definition":"Present participle of 'want'"},{"english":"water","nunuise":"Korin","pronunciation":"KOR-in","definition":"A clear liquid essential for life"},{"english":"whipped","nunuise":"Whivra","pronunciation":"WIV-rah","definition":"Adjective: beaten to a light fluffy texture"},{"english":"whipped cream","nunuise":"Whivra créme","pronunciation":"WIV-rah KREHM","definition":"Aerated cream used as a topping"},{"english":"winter","nunuise":"groenaren","pronunciation":"groh-NAH-ren","definition":"The coldest season of the year"},{"english":"with","nunuise":"wiv","pronunciation":"wiv","definition":"Accompanied by; in the company of"},{"english":"yay","nunuise":"yab","pronunciation":"yab","definition":"An exclamation of joy or celebration"},{"english":"yes","nunuise":"lai","pronunciation":"ly","definition":"An affirmative response"},{"english":"you","nunuise":"ü","pronunciation":"oo","definition":"Second person pronoun"},{"english":"you're","nunuise":"ür","pronunciation":"oor","definition":"Contraction of 'you are'"},{"english":"your","nunuise":"ür","pronunciation":"oor","definition":"Possessive form of 'you'"},{"english":"yummy","nunuise":"Yus","pronunciation":"yus","definition":"Adjective: tasting delicious"},{"english":"zero","nunuise":"ozer","pronunciation":"OH-zer","definition":"The number 0"}];
+
+const NUMBERS = [
+  {n:0,w:"zero",nun:"ozer",p:"OH-zer"},{n:1,w:"one",nun:"noe",p:"noh"},
+  {n:2,w:"two",nun:"tow",p:"tow"},{n:3,w:"three",nun:"rheet",p:"reet"},
+  {n:4,w:"four",nun:"oruf",p:"OH-ruf"},{n:5,w:"five",nun:"fevi",p:"FEH-vee"},
+  {n:6,w:"six",nun:"xis",p:"zis"},{n:7,w:"seven",nun:"nesev",p:"NEH-sev"},
+  {n:8,w:"eight",nun:"tiegh",p:"ty"},{n:9,w:"nine",nun:"nein",p:"nayn"},
+  {n:10,w:"ten",nun:"net",p:"net"},{n:11,w:"eleven",nun:"netnoe",p:"net-NOH"},
+  {n:12,w:"twelve",nun:"nettow",p:"net-TOW"},{n:13,w:"thirteen",nun:"netrheet",p:"net-REET"},
+  {n:14,w:"fourteen",nun:"netoruf",p:"net-OH-ruf"},{n:15,w:"fifteen",nun:"netfevi",p:"net-FEH-vee"},
+  {n:16,w:"sixteen",nun:"netxis",p:"net-ZIS"},{n:17,w:"seventeen",nun:"netnesev",p:"net-NEH-sev"},
+  {n:18,w:"eighteen",nun:"nettiegh",p:"net-TY"},{n:19,w:"nineteen",nun:"netnein",p:"net-NAYN"},
+  {n:20,w:"twenty",nun:"towozer",p:"tow-OH-zer"},{n:21,w:"twenty-one",nun:"townoe",p:"tow-NOH"},
+  {n:22,w:"twenty-two",nun:"towtow",p:"tow-TOW"},{n:23,w:"twenty-three",nun:"towrheet",p:"tow-REET"},
+  {n:24,w:"twenty-four",nun:"toworuf",p:"tow-OH-ruf"},{n:25,w:"twenty-five",nun:"towfevi",p:"tow-FEH-vee"},
+  {n:26,w:"twenty-six",nun:"towxis",p:"tow-ZIS"},{n:27,w:"twenty-seven",nun:"townesev",p:"tow-NEH-sev"},
+  {n:28,w:"twenty-eight",nun:"towtiegh",p:"tow-TY"},{n:29,w:"twenty-nine",nun:"townein",p:"tow-NAYN"},
+  {n:30,w:"thirty",nun:"rheetozer",p:"reet-OH-zer"},{n:31,w:"thirty-one",nun:"rheetozernoe",p:"reet-OH-zer-NOH"},
+];
+
+const PHRASES = [
+  {cat:"Greetings",en:"Hello! Are you good?",nun:"Sallo! Ar Ü Fay?",p:"SAL-oh! ar oo fay?"},
+  {cat:"Greetings",en:"Hi, I'm really happy!",nun:"Ollo, Ti I'm Rillin Lunira!",p:"OL-oh, tee I'm RIL-in loo-NEER-ah!"},
+  {cat:"Greetings",en:"Goodbye — many thanks!",nun:"Luninavin — tarenshün!",p:"loo-nee-NAH-vin — TAH-ren-shoon!"},
+  {cat:"Greetings",en:"Yes please, thank you!",nun:"Lai taru, taren!",p:"ly TAH-roo, TAH-ren!"},
+  {cat:"Feelings",en:"Oh no, I'm very sad.",nun:"Shavi, Ti I'm Veerin Zavi.",p:"SHAH-vee, tee I'm VEER-in ZAH-vee."},
+  {cat:"Feelings",en:"I'm quite happy but quite hungry.",nun:"Ti I'm Kwyt Lunira tav Kwyt Mavro.",p:"tee I'm kwyt loo-NEER-ah tav kwyt MAV-roh."},
+  {cat:"Feelings",en:"Yay! That is really great!",nun:"Yab! Ota osa Rillin Fay!",p:"yab! OH-tah OH-sah RIL-in fay!"},
+  {cat:"Feelings",en:"I'm shocked and angry!",nun:"Ti I'm Huah'd jün Gângy!",p:"tee I'm hwahd yoon GAHN-gee!"},
+  {cat:"Feelings",en:"That is so gross, I'm jealous.",nun:"Ota osa Eugus, Ti I'm Jolus.",p:"OH-tah OH-sah OY-gus, tee I'm JOH-lus."},
+  {cat:"Ordering Food",en:"Can I have chicken nuggets please?",nun:"Kap Ti have Polvé Nog taru?",p:"kap tee hav pol-VAY NOG TAH-roo?"},
+  {cat:"Ordering Food",en:"I want a burger with ketchup.",nun:"Ti frenk un Patee wiv Tomken.",p:"tee frenk un PAH-tee wiv TOM-ken."},
+  {cat:"Ordering Food",en:"Do you have chips?",nun:"Dro Ü have pota?",p:"droh oo hav POH-tah?"},
+  {cat:"Ordering Food",en:"I don't want onion — no thank you.",nun:"Ti dron frenk Onra — nahr taren.",p:"tee dron frenk ON-rah — nahr TAH-ren."},
+  {cat:"Ordering Food",en:"That was very yummy!",nun:"Ota osa Veerin Yus!",p:"OH-tah OH-sah VEER-in yus!"},
+  {cat:"Ordering Drinks",en:"Can I have sparkling water please?",nun:"Kap Ti have spriwasser taru?",p:"kap tee hav spree-WAS-er TAH-roo?"},
+  {cat:"Ordering Drinks",en:"I want a hot chocolate with whipped cream.",nun:"Ti frenk un Hët chovra wiv Whivra créme.",p:"tee frenk un HET CHOV-rah wiv WIV-rah KREHM."},
+  {cat:"Ordering Drinks",en:"Do you have Sprite?",nun:"Dro Ü have sprise?",p:"droh oo hav sprees?"},
+  {cat:"Ordering Drinks",en:"I'm very thirsty — water please!",nun:"Ti I'm Veerin Selin — Korin taru!",p:"tee I'm VEER-in SEH-lin — KOR-in TAH-roo!"},
+  {cat:"Day to Day",en:"I need to go, bye!",nun:"Ti jeve og, navin!",p:"tee JEH-veh og, NAH-vin!"},
+  {cat:"Day to Day",en:"Can you stop talking please?",nun:"Kap Ü pöts nibble nabbling taru?",p:"kap oo puts NIB-ul NAB-ling TAH-roo?"},
+  {cat:"Day to Day",en:"I should go because I have many lessons.",nun:"Ti ferd og bcu Ti have Shün learns.",p:"tee ferd og BEH-kyoo tee hav shoon lernz."},
+  {cat:"Day to Day",en:"My favourite book is really good.",nun:"mein Fivrat buk osa Rillin Fay.",p:"mayn FIV-rat buk OH-sah RIL-in fay."},
+  {cat:"Day to Day",en:"That's really bad — oh no!",nun:"Ota osa Rillin Yaf — shavi!",p:"OH-tah OH-sah RIL-in yaf — SHAH-vee!"},
+  {cat:"People & Names",en:"She is my very best friend.",nun:"Sela osa mein Veerin mira.",p:"SEH-lah OH-sah mayn VEER-in MEER-ah."},
+  {cat:"People & Names",en:"I love you, you are my favourite!",nun:"Ti loik Ü, Ü ar mein Fivrat!",p:"tee loyk oo, oo ar mayn FIV-rat!"},
+  {cat:"People & Names",en:"Many thanks, Nilly!",nun:"Tarenshün, Nilly!",p:"TAH-ren-shoon, NIL-ee!"},
+  {cat:"People & Names",en:"He is quite a rockhead.",nun:"Viro osa Kwyt un ruzgik.",p:"VEE-roh OH-sah kwyt un ROOZ-gik."},
+  {cat:"Seasons & Dates",en:"I hate winter but I love autumn.",nun:"Ti haet groenaren tav Ti loik evétorl.",p:"tee hayt groh-NAH-ren tav tee loyk ev-AY-torl."},
+  {cat:"Seasons & Dates",en:"Today is the first of November.",nun:"Daren osa noe/netnoe/[year].",p:"DAH-ren OH-sah noh / net-NOH / [year]."},
+  {cat:"Seasons & Dates",en:"I have twenty-one books.",nun:"Ti have townoe buks.",p:"tee hav tow-NOH bukz."},
+];
+
+const CONVOS = [
+  {
+    title: "Conversation 1 — Lunch Plans",
+    lines: [
+      {s:"Nilly",b:false,nun:"Sallo Nyler! Ar Ü Fay?",en:"Hello Nyler! Are you good?",p:"SAL-oh NY-ler! ar oo fay?"},
+      {s:"Nyler",b:true,nun:"Sallo Nilly! Lai, Ti I'm Rillin Fay! Ar Ü?",en:"Hello Nilly! Yes, I'm really good! Are you?",p:"SAL-oh NIL-ee! ly, tee I'm RIL-in fay! ar oo?"},
+      {s:"Nilly",b:false,nun:"Ti I'm Kwyt Mavro jün Veerin Selin!",en:"I'm quite hungry and very thirsty!",p:"tee I'm kwyt MAV-roh yoon VEER-in SEH-lin!"},
+      {s:"Nyler",b:true,nun:"Vera! Dro Ü frenk Polvé Nog wiv Tomken?",en:"Okay! Do you want chicken nuggets with ketchup?",p:"VEH-rah! droh oo frenk pol-VAY NOG wiv TOM-ken?"},
+      {s:"Nilly",b:false,nun:"Lai taru! jün Ti frenk spriwasser.",en:"Yes please! And I want sparkling water.",p:"ly TAH-roo! yoon tee frenk spree-WAS-er."},
+      {s:"Nyler",b:true,nun:"Ota osa Veerin Yus! tarenshün Nilly!",en:"It is very yummy! Many thanks Nilly!",p:"OH-tah OH-sah VEER-in yus! TAH-ren-shoon NIL-ee!"},
+      {s:"Nilly",b:false,nun:"Yab! Ü ar mein Fivrat mira!",en:"Yay! You are my favourite friend!",p:"yab! oo ar mayn FIV-rat MEER-ah!"},
+      {s:"Nyler",b:true,nun:"Snivvi! Luninavin Nilly!",en:"Teehee! Goodbye Nilly!",p:"SNIV-ee! loo-nee-NAH-vin NIL-ee!"},
+    ]
+  },
+  {
+    title: "Conversation 2 — A Tough Day",
+    lines: [
+      {s:"Nyler",b:true,nun:"Ollo Nilly! Ti I'm Veerin Zavi daren.",en:"Hi Nilly! I'm very sad today.",p:"OL-oh NIL-ee! tee I'm VEER-in ZAH-vee DAH-ren."},
+      {s:"Nilly",b:false,nun:"Shavi! Bcu? Ar Ü Fay?",en:"Oh no! Why? Are you okay?",p:"SHAH-vee! BEH-kyoo? ar oo fay?"},
+      {s:"Nyler",b:true,nun:"Ti have Shün learns jün Ti I'm Gângy.",en:"I have many lessons and I'm angry.",p:"tee hav shoon lernz yoon tee I'm GAHN-gee."},
+      {s:"Nilly",b:false,nun:"Ota osa Kwyt Yaf! Tav vera — Ti loik Ü Veerin!",en:"That is quite bad! But okay — I like you very much!",p:"OH-tah OH-sah kwyt yaf! tav VEH-rah — tee loyk oo VEER-in!"},
+      {s:"Nyler",b:true,nun:"Taren Nilly. Ti frenk Hët chovra wiv Whivra créme taru.",en:"Thank you Nilly. I want hot chocolate with whipped cream please.",p:"TAH-ren NIL-ee. tee frenk HET CHOV-rah wiv WIV-rah KREHM TAH-roo."},
+      {s:"Nilly",b:false,nun:"Lai! Ti frenk Buberrin jün berrin cookie — Ü frenk?",en:"Yes! I want blueberry and strawberry cookie — do you want one?",p:"ly! tee frenk boo-BEHR-in yoon BEH-rin KOOK-ee — oo frenk?"},
+      {s:"Nyler",b:true,nun:"Lai taru! Ü ar mein Fivrat mira, Ti loik Ü!",en:"Yes please! You are my favourite friend, I love you!",p:"ly TAH-roo! oo ar mayn FIV-rat MEER-ah, tee loyk oo!"},
+      {s:"Nilly",b:false,nun:"Ti loik Ü oot! Navin Nyler — nuck jün Vetra!",en:"I love you too! Bye Nyler — luck and excitement!",p:"tee loyk oo oot! NAH-vin NY-ler — nuk yoon VET-rah!"},
+    ]
+  }
+];
+
+// ── CATEGORY FILTERS ──────────────────────────────────────────────────────────
+const CATEGORIES = {
+  adj:     e => e.definition.toLowerCase().startsWith('adjective') || e.definition.toLowerCase().startsWith('adverb'),
+  pronoun: e => e.definition.toLowerCase().includes('pronoun') || e.definition.toLowerCase().includes('possessive form') || e.definition.toLowerCase().includes('objective form') || e.definition.toLowerCase().includes('contraction of \'i'),
+  verb:    e => ['do','doing','go','going','want','wanting','need','needing','love','loving','have','having','hate','hating','like','liking','stop','stopping','dislike','disliking','drink','drinking','talk','talking','being'].includes(e.english),
+  food:    e => ['food','water','drink','cheese','bread','chips','fries','crisps','gum','sparkling water','coca cola','dr pepper','sprite','blueberry','grape','strawberry','apple','chicken nugget','chicken','nugget','ketchup','mayonnaise','salad','burger','lettuce','onion rings','onion','rings','prawn','cocktail','ice','cream','cookie','dough','cupcake','hot chocolate','chocolate','whipped cream','whipped','cake','gum','drinking'].includes(e.english),
+  feeling: e => ['happy','sad','angry','hungry','thirsty','fear','anxiousness','excitement','sadness','awkwardness','jealous','jealousy','shock','shocked','gross','yummy','spicy','sour','cold','hot','big','little','good','great','bad','smelly','thick','rockheaded','very','really','quite','many'].includes(e.english),
+  school:  e => ['bus','lessons','english','maths','science','teacher','dt','art','book','equipment','pen','pencil','ruler'].includes(e.english),
+  number:  e => e.definition.includes('The number') || ['numbers','number'].includes(e.english),
+  name:    e => ['tilly','tyler','trin','isabella','smith'].includes(e.english),
 };
 
-const descriptions = {
-    "she":"third-person female pronoun",
-    "her":"object form of she",
-    "he":"third-person male pronoun",
-    "him":"object form of he",
-    "i":"first-person pronoun",
-    "it":"neutral pronoun",
-    "you":"second-person pronoun",
-    "his":"possessive form of he",
-    "hello":"a greeting",
-    "hi":"a casual greeting",
-    "hey":"another friendly greeting",
-    "bye":"a short way to say farewell",
-    "goodbye":"a polite farewell",
-    "please":"polite request word",
-    "thank you":"expression of gratitude",
-    "okay":"agreement or acknowledgment",
-    "yay":"expression of excitement",
-    "yes":"affirmative answer",
-    "no":"negative answer",
-    "and":"connects words",
-    "but":"contrast word",
-    "are":"form of be",
-    "because":"reason word",
-    "the":"definite article",
-    "a":"indefinite article",
-    "an":"indefinite article before vowels",
-    "with":"indicates accompaniment",
-    "happy":"positive emotion",
-    "sad":"negative emotion",
-    "excitement":"a feeling of eager joy",
-    "sadness":"a feeling of sorrow",
-    "fear":"feeling scared",
-    "awkwardness":"feeling uncomfortable",
-    "thirsty":"need for drink",
-    "hungry":"need for food",
-    "food":"what you eat",
-    "water":"drink that sustains life",
-    "drink":"liquid to consume",
-    "cheese":"dairy food",
-    "bread":"basic baked food",
-    "chips":"fried potato snack",
-    "crisps":"British for potato chips",
-    "gum":"chewable candy",
-    "sparkling water":"carbonated water",
-    "coca cola":"brand soda",
-    "dr pepper":"another soda drink",
-    "sprite":"lemon-lime soda",
-    "yummy":"tastes good",
-    "spicy":"hot taste",
-    "sour":"acidic taste",
-    "apple":"common fruit",
-    "blueberry":"blue berry fruit",
-    "chicken":"meat from chicken",
-    "burger":"meat sandwich",
-    "salad":"mixed vegetables",
-    "ketchup":"tomato condiment",
-    "mayonnaise":"cream condiment",
-    "onion rings":"fried onion slices",
-    "prawn":"seafood",
-    "hot chocolate":"warm cocoa drink",
-    "ice":"frozen water",
-    "cream":"dairy topping",
-    "cookie":"sweet baked snack",
-    "cupcake":"small cake",
-    "cake":"baked sweet dessert",
-    "do":"perform an action",
-    "don’t":"negation of do",
-    "want":"desire something",
-    "can":"ability word",
-    "should":"suggestion word",
-    "need":"require something",
-    "go":"move somewhere",
-    "talking":"speaking",
-    "love":"deep affection",
-    "have":"to possess",
-    "hate":"strong dislike",
-    "like":"mild affection",
-    "stop":"end an activity",
-    "lessons":"classes at school",
-    "english":"subject",
-    "maths":"math subject",
-    "science":"science subject",
-    "teacher":"educator",
-    "art":"creative class",
-    "book":"reading material",
-    "equipment":"tools you need",
-    "pen":"writing tool",
-    "pencil":"writing tool with lead",
-    "ruler":"measuring tool",
-    "day":"period of light",
-    "night":"period of dark",
-    "autumn":"fall season",
-    "spring":"season of new growth",
-    "summer":"hot season",
-    "winter":"cold season",
-    "leaf":"single plant leaf",
-    "leaves":"multiple plant leaves",
-    "luck":"fortune",
-    "friend":"person you like",
-    "idiot":"rude insult word",
-    "fuck":"strong swear word",
-    "smelly":"has a strong odor",
-    "cold":"low temperature",
-    "thick":"large/wide or extremely stupid",
-    "rockhead":"an alternate way to say stupid, swear word",
-    "rockheaded":"adjective form of rockhead"
-};
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let searchTerm = '';
+let activeFilter = 'all';
+let viewMode = 'table';
 
-let dict = {};
-fetch("https://nunuise.netlify.app/dictionary.json")
-  .then(r => r.json())
-  .then(data => {
-    dict = data;
-    displayDictionary();
+// ── RENDER DICTIONARY ─────────────────────────────────────────────────────────
+function hl(text, term) {
+  if (!term) return text;
+  const re = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+function getFiltered() {
+  return DICT.filter(e => {
+    const matchFilter = activeFilter === 'all' || (CATEGORIES[activeFilter] && CATEGORIES[activeFilter](e));
+    const q = searchTerm.toLowerCase();
+    const matchSearch = !q || e.english.includes(q) || e.nunuise.toLowerCase().includes(q) || e.definition.toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+}
+
+function renderDict() {
+  const filtered = getFiltered();
+  const countEl = document.getElementById('result-count');
+  countEl.textContent = `${filtered.length} entr${filtered.length === 1 ? 'y' : 'ies'}${searchTerm ? ` matching "${searchTerm}"` : ''}`;
+
+  // group by letter
+  const grouped = {};
+  filtered.forEach(e => {
+    const l = e.english[0].toUpperCase();
+    if (!grouped[l]) grouped[l] = [];
+    grouped[l].push(e);
   });
 
-const searchEl = document.getElementById("search");
-const container = document.getElementById("dictionary");
+  const out = document.getElementById('dict-output');
+  if (filtered.length === 0) {
+    out.innerHTML = `<div class="no-results"><div class="no-results-icon">🌿</div><p>No entries found for "<strong>${searchTerm}</strong>"</p></div>`;
+    return;
+  }
 
-searchEl.addEventListener("input", displayDictionary);
+  const letters = Object.keys(grouped).sort();
+  let html = '';
 
-function displayDictionary() {
-    const q = searchEl.value.toLowerCase();
-    container.innerHTML = "";
-  
-    for (const cat in categories) {
-        const section = document.createElement("div");
-        section.className = "category-section";
-        const title = document.createElement("div");
-        title.className = "category-title";
-        title.textContent = cat;
-        section.appendChild(title);
+  if (viewMode === 'table') {
+    letters.forEach(letter => {
+      const entries = grouped[letter];
+      html += `<div class="letter-section" id="sec-${letter}">
+        <div class="letter-heading">
+          <span class="letter-glyph">${letter}</span>
+          <div class="letter-line"></div>
+          <span class="letter-count">${entries.length}</span>
+        </div>
+        <table class="dict-table">
+          <thead><tr>
+            <th>English</th><th>Núnúise</th><th>Pronunciation</th><th>Definition</th>
+          </tr></thead>
+          <tbody>`;
+      entries.forEach(e => {
+        html += `<tr>
+          <td class="td-en">${hl(e.english, searchTerm)}</td>
+          <td class="td-nun">${hl(e.nunuise, searchTerm)}</td>
+          <td class="td-pron">${e.pronunciation}</td>
+          <td class="td-def">${hl(e.definition, searchTerm)}</td>
+        </tr>`;
+      });
+      html += `</tbody></table></div>`;
+    });
+  } else {
+    letters.forEach(letter => {
+      const entries = grouped[letter];
+      html += `<div class="letter-section" id="sec-${letter}">
+        <div class="letter-heading">
+          <span class="letter-glyph">${letter}</span>
+          <div class="letter-line"></div>
+          <span class="letter-count">${entries.length}</span>
+        </div>
+        <div class="dict-cards">`;
+      entries.forEach(e => {
+        html += `<div class="dict-card">
+          <div class="card-en">${hl(e.english, searchTerm)}</div>
+          <div class="card-nun">${hl(e.nunuise, searchTerm)}</div>
+          <div class="card-pron">${e.pronunciation}</div>
+          ${e.definition ? `<div class="card-def">${hl(e.definition, searchTerm)}</div>` : ''}
+        </div>`;
+      });
+      html += `</div></div>`;
+    });
+  }
 
-        let shown = false;
-
-        categories[cat].forEach(word => {
-            if (!dict[word]) return;
-            if (q && !word.toLowerCase().includes(q)) return;
-
-            const card = document.createElement("div");
-            card.className = "word-card";
-            card.innerHTML = `
-              <div class="word-main">${word} → <span class="word-translation">${dict[word]}</span></div>
-              <div class="word-desc">${descriptions[word] || "No description yet"}</div>
-            `;
-            section.appendChild(card);
-            shown = true;
-        });
-
-        if (shown) container.appendChild(section);
-    }
+  out.innerHTML = html;
+  renderLetterNav(letters);
 }
-</script>
 
+function renderLetterNav(activeLetters) {
+  const allLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const nav = document.getElementById('letter-nav');
+  nav.innerHTML = allLetters.map(l =>
+    `<a href="#sec-${l}" class="${activeLetters.includes(l) ? 'has-entries' : ''}">${l}</a>`
+  ).join('');
+}
+
+// ── RENDER NUMBERS ────────────────────────────────────────────────────────────
+function renderNumbers() {
+  const grid = document.getElementById('numbers-grid');
+  grid.innerHTML = NUMBERS.map(n =>
+    `<div class="num-card">
+      <div class="num-digit">${n.n}</div>
+      <div class="num-info">
+        <div class="num-word">${n.w}</div>
+        <div class="num-nun">${n.nun}</div>
+        <div class="num-pron">${n.p}</div>
+      </div>
+    </div>`
+  ).join('');
+}
+
+// ── RENDER PHRASES ────────────────────────────────────────────────────────────
+function renderPhrases() {
+  const cats = {};
+  PHRASES.forEach(p => { if (!cats[p.cat]) cats[p.cat] = []; cats[p.cat].push(p); });
+  const out = document.getElementById('phrases-output');
+  out.innerHTML = Object.entries(cats).map(([cat, items]) =>
+    `<div class="phrase-cat">
+      <div class="phrase-cat-title">${cat}</div>
+      ${items.map(p => `<div class="phrase-row">
+        <div class="phrase-en">${p.en}</div>
+        <div class="phrase-nun">${p.nun}</div>
+        <div class="phrase-pron">${p.p}</div>
+      </div>`).join('')}
+    </div>`
+  ).join('');
+}
+
+// ── RENDER CONVOS ─────────────────────────────────────────────────────────────
+function renderConvos() {
+  const out = document.getElementById('convos-output');
+  out.innerHTML = CONVOS.map(c =>
+    `<div class="convo-wrap">
+      <div class="convo-title">${c.title}</div>
+      ${c.lines.map(l =>
+        `<div class="convo-line">
+          <div class="convo-speaker ${l.b ? 'b' : ''}">${l.s}</div>
+          <div class="convo-content">
+            <div class="convo-nun">${l.nun}</div>
+            <div class="convo-en">"${l.en}"</div>
+            <div class="convo-pron">${l.p}</div>
+          </div>
+        </div>`
+      ).join('')}
+    </div>`
+  ).join('');
+}
+
+// ── EVENTS ────────────────────────────────────────────────────────────────────
+document.getElementById('search').addEventListener('input', e => {
+  searchTerm = e.target.value.trim();
+  renderDict();
+});
+
+document.getElementById('filter-tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.filter-tab');
+  if (!tab) return;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  activeFilter = tab.dataset.filter;
+  renderDict();
+});
+
+document.getElementById('btn-table').addEventListener('click', () => {
+  viewMode = 'table';
+  document.getElementById('btn-table').classList.add('active');
+  document.getElementById('btn-cards').classList.remove('active');
+  renderDict();
+});
+document.getElementById('btn-cards').addEventListener('click', () => {
+  viewMode = 'cards';
+  document.getElementById('btn-cards').classList.add('active');
+  document.getElementById('btn-table').classList.remove('active');
+  renderDict();
+});
+
+document.querySelectorAll('.page-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const page = tab.dataset.page;
+    document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(`page-${page}`).classList.add('active');
+  });
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+document.getElementById('entry-count').textContent = `${DICT.length} entries`;
+renderDict();
+renderNumbers();
+renderPhrases();
+renderConvos();
+</script>
 </body>
 </html>
