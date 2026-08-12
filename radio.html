@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <title>LGBT Radio</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pink: #ffd6e8;
+            --purple: #e5d8ff;
+            --blue: #d9edff;
+            --background: #faf8fc;
+            --card: rgba(255, 255, 255, 0.82);
+            --text: #25232a;
+            --muted: #77727d;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--text);
+
+            background:
+                radial-gradient(circle at 10% 10%, var(--pink), transparent 35%),
+                radial-gradient(circle at 90% 20%, var(--purple), transparent 35%),
+                radial-gradient(circle at 50% 100%, var(--blue), transparent 40%),
+                var(--background);
+        }
+
+        .page {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+            padding: 35px 20px;
+        }
+
+        /* MAIN RADIO LOGO */
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 20px;
+            border-radius: 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        /* RADIO TITLE */
+
+        .radio-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .radio-title h1 {
+            margin: 0;
+            font-size: 38px;
+        }
+
+        .radio-title p {
+            margin: 8px 0 0;
+            color: var(--muted);
+        }
+
+        /* PLAYER CARD */
+
+        .player-card {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(80, 50, 100, 0.12);
+        }
+
+        /* ARTWORK */
+
+        .artwork {
+            width: 100%;
+            max-width: 360px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 25px;
+            border-radius: 22px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .artwork.changing {
+            opacity: 0;
+            transform: scale(0.97);
+        }
+
+        /* SONG INFORMATION */
+
+        .track-info {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .track-info .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #9a8fa2;
+            margin-bottom: 8px;
+        }
+
+        .track-info h2 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .track-info p {
+            margin: 7px 0 0;
+            color: var(--muted);
+        }
+
+        /* CUSTOM CONTROLS */
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .play-button {
+            width: 64px;
+            height: 64px;
+            border: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f7b9d5, #cbb7f4);
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(160, 120, 180, 0.25);
+            transition: transform 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .play-button:hover {
+            transform: scale(1.06);
+        }
+
+        .progress-area {
+            flex: 1;
+        }
+
+        .progress {
+            width: 100%;
+            height: 8px;
+            appearance: none;
+            -webkit-appearance: none;
+            border-radius: 20px;
+            background: #e6e1e8;
+            cursor: pointer;
+        }
+
+        .progress::-webkit-slider-thumb {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background: #b99bd9;
+            cursor: pointer;
+        }
+
+        .progress::-moz-range-thumb {
+            width: 17px;
+            height: 17px;
+            border: 0;
+            border-radius: 50%;
+            background: #b99bd9;
+            cursor: pointer;
+        }
+
+        .time {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 7px;
+            color: #8b858f;
+            font-size: 12px;
+        }
+
+        /* VOLUME */
+
+        .volume {
+            width: 90px;
+        }
+
+        /* PALE SECTION HEADERS */
+
+        .section {
+            margin-top: 25px;
+            padding: 22px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.55);
+        }
+
+        .section h3 {
+            margin: 0 0 8px;
+            padding: 10px 15px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #ffe3ef, #eee5ff);
+            font-size: 15px;
+        }
+
+        .section p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+            .page {
+                padding: 25px 12px;
+            }
+
+            .logo {
+                width: 120px;
+                height: 120px;
+            }
+
+            .radio-title h1 {
+                font-size: 30px;
+            }
+
+            .player-card {
+                padding: 20px;
+                border-radius: 22px;
+            }
+
+            .controls {
+                gap: 12px;
+            }
+
+            .volume {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- RADIO LOGO -->
+    <img
+        class="logo"
+        src="https://nunuise.netlify.app/IMG_0973.png"
+        alt="LGBT Radio logo"
+    >
+
+    <div class="radio-title">
+        <h1>LGBT Radio</h1>
+        <p>Best LGBT Radio Show</p>
+    </div>
+
+    <!-- PLAYER -->
+    <div class="player-card">
+
+        <img
+            id="artwork"
+            class="artwork"
+            src="https://nunuise.netlify.app/IMG_0714.jpeg"
+            alt="Radio artwork"
+        >
+
+        <div class="track-info">
+            <div class="label">Now Playing</div>
+
+            <h2 id="songTitle">LGBT Radio</h2>
+
+            <p id="artist">Best LGBT Radio Show</p>
+        </div>
+
+        <div class="controls">
+
+            <button
+                id="playButton"
+                class="play-button"
+                aria-label="Play radio">
+                ▶
+            </button>
+
+            <div class="progress-area">
+
+                <input
+                    id="progress"
+                    class="progress"
+                    type="range"
+                    min="0"
+                    max="744"
+                    value="0"
+                    step="1"
+                >
+
+                <div class="time">
+                    <span id="currentTime">0:00</span>
+                    <span>12:24</span>
+                </div>
+
+            </div>
+
+            <input
+                id="volume"
+                class="progress volume"
+                type="range"
+                min="0"
+                max="1"
+                value="1"
+                step="0.01"
+                aria-label="Volume"
+            >
+
+        </div>
+
+    </div>
+
+    <div class="section">
+
+        <h3>About the radio</h3>
+
+        <p>
+            Welcome to LGBT Radio — your place for music, shows and
+            everything happening on the station.
+        </p>
+
+    </div>
+
+</div>
+
+
+<audio
+    id="radio"
+    preload="metadata"
+    src="https://nunuise.netlify.app/radio.mp3">
+</audio>
+
+
+<script>
+
+    const audio = document.getElementById("radio");
+    const playButton = document.getElementById("playButton");
+    const progress = document.getElementById("progress");
+    const volume = document.getElementById("volume");
+
+    const artwork = document.getElementById("artwork");
+    const songTitle = document.getElementById("songTitle");
+    const artist = document.getElementById("artist");
+
+    const currentTime = document.getElementById("currentTime");
+
+
+    /*
+        DEFAULT RADIO ARTWORK
+    */
+
+    const radioArtwork =
+        "https://nunuise.netlify.app/IMG_0714.jpeg";
+
+
+    /*
+        TRACK INFORMATION
+
+        Times are in seconds.
+
+        Track 1 and Track 2 are left as generic
+        labels here rather than displaying explicit
+        song titles.
+    */
+
+    const tracks = [
+
+        {
+            start: 11,
+            end: 173,
+            title: "Faggot",
+            artist: "MSI",
+            artwork: "https://i.scdn.co/image/ab67616d0000b2736d0186f5ba84de05d6e6f2ab"
+        },
+
+        {
+            start: 183,
+            end: 379,
+            title: "deepthroat",
+            artist: "CupcakKe",
+            artwork: "https://images.genius.com/55e403c2009abd893f01a13eefd70c06.1000x1000x1.png"
+        },
+
+        {
+            start: 398,
+            end: 575,
+            title: "I Kissed a Girl",
+            artist: "Katy Perry",
+            artwork:
+                "https://www.udiscovermusic.com/wp-content/uploads/2025/01/katy-perry-one.jpg"
+        },
+
+        {
+            start: 603,
+            end: 742,
+            title: "Christmas Kids",
+            artist: "Roar",
+            artwork:
+                "https://f4.bcbits.com/img/a4141072341_10.jpg"
+        }
+
+    ];
+
+
+    let lastTrack = null;
+
+
+    /*
+        FORMAT TIME
+    */
+
+    function formatTime(seconds) {
+
+        seconds = Math.floor(seconds);
+
+        const minutes = Math.floor(seconds / 60);
+
+        const secs =
+            String(seconds % 60).padStart(2, "0");
+
+        return `${minutes}:${secs}`;
+    }
+
+
+    /*
+        UPDATE WHAT IS PLAYING
+    */
+
+    function updateTrack() {
+
+        const time = audio.currentTime;
+
+        let activeTrack = null;
+
+        for (const track of tracks) {
+
+            if (
+                time >= track.start &&
+                time < track.end
+            ) {
+                activeTrack = track;
+                break;
+            }
+
+        }
+
+
+        /*
+            BETWEEN SONGS
+        */
+
+        if (!activeTrack) {
+
+            if (lastTrack !== "radio") {
+
+                artwork.classList.add("changing");
+
+                setTimeout(() => {
+
+                    artwork.src = radioArtwork;
+
+                    songTitle.textContent =
+                        "LGBT Radio";
+
+                    artist.textContent =
+                        "Best LGBT Radio Show";
+
+                    artwork.classList.remove("changing");
+
+                }, 150);
+
+                lastTrack = "radio";
+            }
+
+            return;
+        }
+
+
+        /*
+            SONG CHANGED
+        */
+
+        if (lastTrack !== activeTrack.title) {
+
+            artwork.classList.add("changing");
+
+            setTimeout(() => {
+
+                artwork.src =
+                    activeTrack.artwork;
+
+                songTitle.textContent =
+                    activeTrack.title;
+
+                artist.textContent =
+                    activeTrack.artist;
+
+                artwork.classList.remove("changing");
+
+            }, 150);
+
+            lastTrack = activeTrack.title;
+        }
+
+    }
+
+
+    /*
+        PLAY / PAUSE
+    */
+
+    playButton.addEventListener("click", () => {
+
+        if (audio.paused) {
+
+            audio.play();
+
+            playButton.textContent = "Ⅱ";
+            playButton.setAttribute(
+                "aria-label",
+                "Pause radio"
+            );
+
+        } else {
+
+            audio.pause();
+
+            playButton.textContent = "▶";
+            playButton.setAttribute(
+                "aria-label",
+                "Play radio"
+            );
+        }
+
+    });
+
+
+    /*
+        PROGRESS BAR
+    */
+
+    audio.addEventListener("timeupdate", () => {
+
+        progress.value =
+            audio.currentTime;
+
+        currentTime.textContent =
+            formatTime(audio.currentTime);
+
+        updateTrack();
+
+    });
+
+
+    /*
+        SEEK
+    */
+
+    progress.addEventListener("input", () => {
+
+        audio.currentTime =
+            Number(progress.value);
+
+        updateTrack();
+
+    });
+
+
+    /*
+        VOLUME
+    */
+
+    volume.addEventListener("input", () => {
+
+        audio.volume =
+            Number(volume.value);
+
+    });
+
+
+    /*
+        AUDIO LOADED
+    */
+
+    audio.addEventListener("loadedmetadata", () => {
+
+        if (audio.duration) {
+
+            progress.max =
+                audio.duration;
+
+        }
+
+    });
+
+
+    /*
+        RESET PLAYER WHEN AUDIO ENDS
+    */
+
+    audio.addEventListener("ended", () => {
+
+        playButton.textContent = "▶";
+
+        songTitle.textContent =
+            "LGBT Radio";
+
+        artist.textContent =
+            "Best LGBT Radio Show";
+
+        artwork.src =
+            radioArtwork;
+
+        progress.value = 0;
+
+        currentTime.textContent =
+            "0:00";
+
+        lastTrack = "radio";
+
+    });
+
+</script>
+
+</body>
+</html>
