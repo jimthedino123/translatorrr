@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingdom of Núnúia — ID / Driving Licence Generator</title>
+<style>
+  @font-face {
+    font-family: 'OCRB';
+    src: url('data:font/ttf;base64,__FONT_B64__') format('truetype');
+    font-display: swap;
+  }
+
+  :root{
+    --ink: #12261e;
+    --ink-soft: #2c4438;
+    --paper: #efe9d8;
+    --gold: #a9832f;
+    --gold-dim: #cbb073;
+    --red: #7a1f22;
+    --line: rgba(18,38,30,0.25);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'OCRB', 'Courier New', monospace;
+    min-height:100%;
+  }
+
+  body{ position:relative; overflow-x:hidden; }
+
+  .bg-crest{
+    position: fixed;
+    top: 50%; left: 50%;
+    width: 900px; max-width: 220vw;
+    transform: translate(-50%,-50%) rotate(-12deg);
+    opacity: 0.05;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap{
+    position:relative;
+    z-index:1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 22px 90px;
+  }
+
+  header{ text-align:center; margin-bottom: 34px; }
+
+  .eyebrow{
+    letter-spacing: 0.35em;
+    font-size: 12px;
+    color: var(--gold-dim);
+    margin: 0 0 10px;
+  }
+
+  h1{
+    font-size: clamp(26px, 5vw, 38px);
+    margin: 0 0 8px;
+    color: var(--paper);
+    letter-spacing: 0.02em;
+  }
+
+  .subtitle{
+    color: var(--gold-dim);
+    font-size: 14px;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .card{
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    padding: 28px 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+  }
+
+  .card h2{
+    margin: 0 0 4px;
+    font-size: 15px;
+    letter-spacing: 0.18em;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 12px;
+  }
+
+  .card .hint{
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 8px 0 18px;
+    line-height:1.5;
+  }
+
+  .field-row{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 560px){
+    .field-row{ grid-template-columns: 1fr; }
+  }
+
+  label{
+    display:block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    margin: 14px 0 6px;
+  }
+
+  input[type=text], input[type=date], textarea{
+    width:100%;
+    padding: 10px 10px;
+    border: 1px solid var(--line);
+    background: #fbf8ee;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 14px;
+    border-radius: 2px;
+    resize: vertical;
+  }
+
+  input:focus, textarea:focus{
+    outline: 2px solid var(--gold);
+    outline-offset: 1px;
+  }
+
+  .photo-row{
+    display:flex;
+    align-items:center;
+    gap: 18px;
+    margin-top: 14px;
+  }
+
+  .photo-frame{
+    width: 84px;
+    height: 108px;
+    border: 1px solid var(--ink);
+    background: repeating-linear-gradient(45deg, #ddd6c1, #ddd6c1 4px, #e7e1cd 4px, #e7e1cd 8px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex-shrink:0;
+  }
+
+  .photo-frame img{ width:100%; height:100%; object-fit:cover; }
+
+  .photo-frame span{
+    font-size: 9px;
+    color: var(--ink-soft);
+    text-align:center;
+    padding: 4px;
+    letter-spacing:0.05em;
+  }
+
+  .file-btn{
+    display:inline-block;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    padding: 9px 16px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    cursor:pointer;
+    border-radius: 2px;
+  }
+
+  .file-btn:hover{ background: var(--ink); color: var(--paper); }
+
+  input[type=file]{ display:none; }
+
+  .cat-grid{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .cat-chip{
+    display:flex;
+    align-items:center;
+    gap: 6px;
+    border: 1px solid var(--line);
+    background: #fbf8ee;
+    padding: 8px 12px;
+    border-radius: 2px;
+    font-size: 13px;
+    cursor:pointer;
+  }
+
+  .cat-chip input{ width:auto; margin:0; }
+
+  .btn{
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    cursor:pointer;
+    border-radius: 2px;
+  }
+  .btn:hover{ background: var(--ink-soft); }
+
+  .generate-bar{ text-align:center; margin-top: 8px; }
+
+  .generate-bar .btn{ font-size: 15px; padding: 14px 34px; }
+
+  #status{
+    text-align:center;
+    font-size: 12.5px;
+    margin-top: 14px;
+    min-height: 18px;
+    color: var(--gold-dim);
+  }
+
+  #status.error{ color: #e5a3a3; }
+  #status.ok{ color: #b7e0b0; }
+
+  footer{
+    text-align:center;
+    font-size: 11px;
+    color: rgba(239,233,216,0.4);
+    margin-top: 40px;
+    line-height:1.7;
+  }
+
+  .required{ color: var(--red); }
+</style>
+</head>
+<body>
+
+<img class="bg-crest" src="data:image/png;base64,__COAT_B64__" alt="">
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">EUROPEAN UNION · KINGDOM OF NÚNÚIA</p>
+    <h1>ID / Driving Licence Generator</h1>
+    <p class="subtitle">Fill in your details and download a printable Núnúia identity card that doubles as a driving licence — actual card size, front and back, set in OCR-B.</p>
+  </header>
+
+  <div class="card">
+    <h2>HOLDER DETAILS</h2>
+
+    <label for="f-name">Full name <span class="required">*</span></label>
+    <input type="text" id="f-name" placeholder="e.g. Tyler Connor Smith">
+
+    <div class="field-row">
+      <div>
+        <label for="f-dob">Date of birth <span class="required">*</span></label>
+        <input type="date" id="f-dob">
+      </div>
+      <div>
+        <label for="f-pob">Place of birth</label>
+        <input type="text" id="f-pob" placeholder="e.g. Norwich">
+      </div>
+    </div>
+
+    <label for="f-address">Address</label>
+    <textarea id="f-address" rows="2" placeholder="e.g. 12 Willow Lane, Norwich"></textarea>
+
+    <div class="field-row">
+      <div>
+        <label for="f-issue">Issue date</label>
+        <input type="date" id="f-issue">
+        <p class="hint" style="margin:6px 0 0;">Leave blank to use today.</p>
+      </div>
+      <div>
+        <label for="f-expiry">Expiry date</label>
+        <input type="date" id="f-expiry">
+        <p class="hint" style="margin:6px 0 0;">Leave blank for +10 years.</p>
+      </div>
+    </div>
+
+    <label for="f-docnum">Document number</label>
+    <input type="text" id="f-docnum" placeholder="Leave blank to auto-generate" maxlength="12">
+
+    <label>Photo</label>
+    <div class="photo-row">
+      <div class="photo-frame" id="photo-frame"><span>NO PHOTO</span></div>
+      <div>
+        <button type="button" class="file-btn" id="photo-btn">UPLOAD PHOTO</button>
+        <input type="file" id="f-photo" accept="image/*">
+        <p class="hint" style="margin:8px 0 0;">Converted to greyscale automatically.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>DRIVING CATEGORIES</h2>
+    <p class="hint">Select which vehicle classes appear on the back of the licence.</p>
+    <div class="cat-grid" id="cat-grid">
+      <label class="cat-chip"><input type="checkbox" value="AM"> AM · Moped</label>
+      <label class="cat-chip"><input type="checkbox" value="A" checked> A · Motorcycle</label>
+      <label class="cat-chip"><input type="checkbox" value="B" checked> B · Car</label>
+      <label class="cat-chip"><input type="checkbox" value="C"> C · Truck</label>
+      <label class="cat-chip"><input type="checkbox" value="D"> D · Bus</label>
+    </div>
+  </div>
+
+  <div class="generate-bar">
+    <button type="button" class="btn" id="generate-btn">GENERATE ID / LICENCE PDF</button>
+    <p id="status"></p>
+  </div>
+
+  <footer>
+    Kingdom of Núnúia is a fictional country. This is a novelty document for fun, not a valid<br>
+    ID, driving licence, or proof of identity anywhere.
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var FONT_B64 = "__FONT_B64__";
+  var COAT_B64 = "__COAT_B64__";
+  var COAT_DATAURL = "data:image/png;base64," + COAT_B64;
+  var COAT_RATIO = 520 / 636;
+
+  var photoGrayDataUrl = null;
+
+  // ---------- Photo handling ----------
+  var photoBtn = document.getElementById('photo-btn');
+  var photoInput = document.getElementById('f-photo');
+  var photoFrame = document.getElementById('photo-frame');
+
+  photoBtn.addEventListener('click', function(){ photoInput.click(); });
+
+  photoInput.addEventListener('change', function(e){
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var img = new Image();
+      img.onload = function(){
+        var targetW = 240, targetH = 300;
+        var canvas = document.createElement('canvas');
+        canvas.width = targetW; canvas.height = targetH;
+        var ctx = canvas.getContext('2d');
+
+        var srcRatio = img.width / img.height;
+        var dstRatio = targetW / targetH;
+        var sx, sy, sw, sh;
+        if (srcRatio > dstRatio){
+          sh = img.height; sw = sh * dstRatio;
+          sx = (img.width - sw) / 2; sy = 0;
+        } else {
+          sw = img.width; sh = sw / dstRatio;
+          sx = 0; sy = (img.height - sh) / 2;
+        }
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH);
+
+        var imgData = ctx.getImageData(0, 0, targetW, targetH);
+        var d = imgData.data;
+        for (var i = 0; i < d.length; i += 4){
+          var gray = 0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2];
+          d[i] = d[i+1] = d[i+2] = gray;
+        }
+        ctx.putImageData(imgData, 0, 0);
+
+        photoGrayDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+        photoFrame.innerHTML = '<img src="' + photoGrayDataUrl + '" alt="ID photo">';
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ---------- Date helpers ----------
+  function isoToDate(iso){
+    var p = iso.split('-');
+    return new Date(Date.UTC(parseInt(p[0],10), parseInt(p[1],10)-1, parseInt(p[2],10)));
+  }
+  function pad2(n){ return (n < 10 ? '0' : '') + n; }
+  function formatDMY(dateObj){
+    return pad2(dateObj.getUTCDate()) + '.' + pad2(dateObj.getUTCMonth()+1) + '.' + dateObj.getUTCFullYear();
+  }
+  function formatYYMMDD(dateObj){
+    var y = dateObj.getUTCFullYear() % 100;
+    return pad2(y) + pad2(dateObj.getUTCMonth()+1) + pad2(dateObj.getUTCDate());
+  }
+  function addYears(dateObj, years){
+    var d = new Date(dateObj.getTime());
+    d.setUTCFullYear(d.getUTCFullYear() + years);
+    return d;
+  }
+
+  // ---------- Pseudo document number ----------
+  function simpleHash(str){
+    var h = 0;
+    for (var i = 0; i < str.length; i++){
+      h = (h * 31 + str.charCodeAt(i)) >>> 0;
+    }
+    return h;
+  }
+  function autoDocNumber(name, dobIso){
+    var h = simpleHash((name || '') + (dobIso || ''));
+    var digits = (h % 9000000 + 1000000).toString();
+    return 'NUN' + digits;
+  }
+
+  // ---------- Pseudo-MRZ ----------
+  function mrzify(s){
+    return (s || '').toUpperCase().replace(/[^A-Z0-9]/g, '<');
+  }
+  function padMrz(s, len){
+    s = s.slice(0, len);
+    while (s.length < len) s += '<';
+    return s;
+  }
+  function buildMrzLines(name, dobDate, expiryDate, docNumber){
+    var parts = (name || '').trim().split(/\s+/);
+    var surname = parts.length > 1 ? parts[parts.length - 1] : (parts[0] || 'HOLDER');
+    var given = parts.length > 1 ? parts.slice(0, -1).join(' ') : '';
+
+    var line1 = padMrz('ID' + 'NUN' + mrzify(docNumber), 30);
+    var line2 = padMrz(formatYYMMDD(dobDate) + '<' + formatYYMMDD(expiryDate) + '<NUN', 30);
+    var line3 = padMrz(mrzify(surname) + '<<' + mrzify(given), 30);
+    return [line1, line2, line3];
+  }
+
+  // ---------- PDF generation ----------
+  var CARD_W = 243, CARD_H = 153;
+  var FONT_FILE = 'OCRB-Regular.ttf';
+  var FONT_NAME = 'OCRB';
+
+  function setupDoc(){
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: 'pt', format: [CARD_W, CARD_H] });
+    doc.addFileToVFS(FONT_FILE, FONT_B64);
+    doc.addFont(FONT_FILE, FONT_NAME, 'normal');
+    doc.setFont(FONT_NAME, 'normal');
+    doc.setTextColor(20, 20, 18);
+    return doc;
+  }
+
+  function cardBackground(doc){
+    doc.setFillColor(239, 233, 216);
+    doc.rect(0, 0, CARD_W, CARD_H, 'F');
+    doc.setDrawColor(18, 38, 30);
+    doc.setLineWidth(1.4);
+    doc.rect(3, 3, CARD_W - 6, CARD_H - 6, 'S');
+
+    doc.setGState(new doc.GState({ opacity: 0.06 }));
+    var wmW = 150, wmH = wmW / COAT_RATIO;
+    doc.addImage(COAT_DATAURL, 'PNG', CARD_W - wmW + 30, CARD_H - wmH + 20, wmW, wmH, undefined, undefined, 18);
+    doc.setGState(new doc.GState({ opacity: 1 }));
+  }
+
+  function drawFront(doc, data){
+    cardBackground(doc);
+
+    var crestW = 20, crestH = crestW / COAT_RATIO;
+    doc.addImage(COAT_DATAURL, 'PNG', 8, 7, crestW, crestH);
+
+    doc.setFontSize(7.5);
+    doc.text('KINGDOM OF NUNUIA', 32, 13);
+    doc.setFontSize(5.2);
+    doc.setTextColor(90, 90, 82);
+    doc.text('IDENTITY CARD · DRIVING LICENCE', 32, 20);
+    doc.setTextColor(20, 20, 18);
+
+    doc.setDrawColor(18, 38, 30);
+    doc.setLineWidth(0.5);
+    doc.line(8, 27, CARD_W - 8, 27);
+
+    var pw = 52, ph = 66, px = 8, py = 34;
+    doc.setLineWidth(0.8);
+    doc.rect(px, py, pw, ph, 'S');
+    if (data.photo){
+      doc.addImage(data.photo, 'JPEG', px, py, pw, ph);
+      doc.rect(px, py, pw, ph, 'S');
+    } else {
+      doc.setFontSize(5);
+      doc.setTextColor(140, 135, 118);
+      doc.text('NO PHOTO', px + pw/2, py + ph/2, { align: 'center' });
+      doc.setTextColor(20, 20, 18);
+    }
+
+    var lx = px + pw + 8;
+    var ly = 39;
+    var gap = 15.5;
+
+    function field(label, value){
+      doc.setFontSize(4.6);
+      doc.setTextColor(90, 90, 82);
+      doc.text(label, lx, ly);
+      doc.setFontSize(7);
+      doc.setTextColor(20, 20, 18);
+      var v = (value || '-').toString();
+      doc.text(v, lx, ly + 7, { maxWidth: CARD_W - lx - 8 });
+      ly += gap;
+    }
+
+    field('SURNAME / GIVEN NAMES', data.name.toUpperCase());
+    field('DATE OF BIRTH', data.dobStr + (data.pob ? '   ' + data.pob.toUpperCase() : ''));
+    field('DOCUMENT NO.', data.docNumber);
+    field('ISSUED / EXPIRES', data.issueStr + '  -  ' + data.expiryStr);
+
+    if (data.address){
+      doc.setFontSize(4.6);
+      doc.setTextColor(90, 90, 82);
+      doc.text('ADDRESS', lx, ly);
+      doc.setFontSize(6);
+      doc.setTextColor(20, 20, 18);
+      var addrLines = doc.splitTextToSize(data.address, CARD_W - lx - 8);
+      doc.text(addrLines.slice(0, 2), lx, ly + 6.5);
+    }
+  }
+
+  function drawBack(doc, data){
+    cardBackground(doc);
+
+    doc.setFontSize(6);
+    doc.text('CATEGORIES', 10, 14);
+
+    var tx = 10, ty = 20;
+    var colW = [26, 60, 60];
+    doc.setFontSize(4.6);
+    doc.setTextColor(90, 90, 82);
+    doc.text('CAT', tx, ty);
+    doc.text('VALID FROM', tx + colW[0], ty);
+    doc.text('VALID TO', tx + colW[0] + colW[1], ty);
+    doc.setDrawColor(18, 38, 30);
+    doc.setLineWidth(0.4);
+    doc.line(tx, ty + 3, tx + colW[0] + colW[1] + colW[2], ty + 3);
+
+    var rowY = ty + 11;
+    doc.setTextColor(20, 20, 18);
+    data.categories.forEach(function(cat){
+      doc.setFontSize(6.5);
+      doc.text(cat, tx, rowY);
+      doc.setFontSize(6);
+      doc.text(data.issueStr, tx + colW[0], rowY);
+      doc.text(data.expiryStr, tx + colW[0] + colW[1], rowY);
+      rowY += 10;
+    });
+    if (data.categories.length === 0){
+      doc.setFontSize(5.5);
+      doc.setTextColor(140, 135, 118);
+      doc.text('No categories selected', tx, rowY);
+      doc.setTextColor(20, 20, 18);
+    }
+
+    doc.setFontSize(5);
+    doc.setTextColor(90, 90, 82);
+    doc.text('HOLDER\'S SIGNATURE', CARD_W - 90, CARD_H - 46);
+    doc.setDrawColor(20, 20, 18);
+    doc.setLineWidth(0.5);
+    doc.line(CARD_W - 90, CARD_H - 34, CARD_W - 10, CARD_H - 34);
+
+    // pseudo machine-readable zone
+    doc.setFontSize(6.6);
+    doc.setTextColor(20, 20, 18);
+    var mrzY = CARD_H - 24;
+    data.mrz.forEach(function(line, i){
+      doc.text(line.split('').join('\u200a'), 10, mrzY + i * 7.2);
+    });
+
+    doc.setFontSize(4.2);
+    doc.setTextColor(140, 135, 118);
+    doc.text('Fictional novelty document — Kingdom of Nunuia is not a real country.', CARD_W/2, 12, { align: 'center' });
+    doc.setTextColor(20, 20, 18);
+  }
+
+  function generatePdf(){
+    var statusEl = document.getElementById('status');
+    statusEl.className = '';
+    statusEl.textContent = '';
+
+    var name = document.getElementById('f-name').value.trim();
+    var dobIso = document.getElementById('f-dob').value;
+    var pob = document.getElementById('f-pob').value.trim();
+    var address = document.getElementById('f-address').value.trim();
+    var issueIso = document.getElementById('f-issue').value;
+    var expiryIso = document.getElementById('f-expiry').value;
+    var docNumInput = document.getElementById('f-docnum').value.trim();
+
+    if (!name || !dobIso){
+      statusEl.textContent = 'Please fill in at least your name and date of birth.';
+      statusEl.className = 'error';
+      return;
+    }
+
+    try {
+      var dobDate = isoToDate(dobIso);
+      var issueDate = issueIso ? isoToDate(issueIso) : new Date();
+      var expiryDate = expiryIso ? isoToDate(expiryIso) : addYears(issueDate, 10);
+      var docNumber = docNumInput || autoDocNumber(name, dobIso);
+
+      var categories = Array.prototype.slice.call(document.querySelectorAll('#cat-grid input:checked')).map(function(el){ return el.value; });
+
+      var data = {
+        name: name,
+        pob: pob,
+        address: address,
+        dobStr: formatDMY(dobDate),
+        issueStr: formatDMY(issueDate),
+        expiryStr: formatDMY(expiryDate),
+        docNumber: docNumber,
+        categories: categories,
+        photo: photoGrayDataUrl,
+        mrz: buildMrzLines(name, dobDate, expiryDate, docNumber)
+      };
+
+      var doc = setupDoc();
+      drawFront(doc, data);
+      doc.addPage([CARD_W, CARD_H]);
+      drawBack(doc, data);
+
+      var fileSafeName = (name || 'holder').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      doc.save('nunuia-id-licence-' + fileSafeName + '.pdf');
+
+      statusEl.textContent = 'ID / licence generated — check your downloads.';
+      statusEl.className = 'ok';
+    } catch (err){
+      console.error(err);
+      statusEl.textContent = 'Something went wrong generating the PDF: ' + err.message;
+      statusEl.className = 'error';
+    }
+  }
+
+  document.getElementById('generate-btn').addEventListener('click', generatePdf);
+
+})();
+</script>
+</body>
+</html>
