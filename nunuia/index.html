@@ -1,1 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kingdom of Núnúia — Official Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#top">
+      <img src="assets/img/coat-of-arms.png" alt="Coat of Arms of Núnúia" class="brand-crest">
+      <span class="brand-text">
+        <span class="brand-eyebrow">KINGDOM OF</span>
+        <span class="brand-name">Núnúia</span>
+      </span>
+    </a>
+    <nav class="site-nav">
+      <a href="#top" data-i18n="nav-home">Home</a>
+      <a href="#news" data-i18n="nav-news">News</a>
+      <a href="#culture" data-i18n="nav-culture">Culture</a>
+      <a href="#map" data-i18n="nav-map">Map</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section id="top" class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="eyebrow" data-i18n="hero-eyebrow">European Union · Est. present day</p>
+        <h1 data-i18n="hero-title">Welcome to the Kingdom of Núnúia</h1>
+        <p class="hero-sub" data-i18n="hero-sub">A small kingdom, big on charm. Come for the coastline, stay for the cheese, leave fluent in at least three words of Núnúise.</p>
+        <div class="hero-actions">
+          <a href="#culture" class="btn btn-primary" data-i18n="hero-cta-culture">Explore Culture</a>
+          <a href="#news" class="btn btn-ghost" data-i18n="hero-cta-news">Latest News</a>
+        </div>
+      </div>
+      <div class="hero-flag">
+        <img src="assets/img/flag-placeholder.svg" alt="Flag of Núnúia" id="flag-img">
+        <p class="flag-caption" data-i18n="flag-caption">Flag of the Kingdom</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="news" class="section">
+    <div class="section-inner">
+      <p class="eyebrow" data-i18n="news-eyebrow">Stay Informed</p>
+      <h2 data-i18n="news-heading">News &amp; Announcements</h2>
+
+      <div class="card-grid">
+        <article class="card">
+          <p class="card-date">12 Aug</p>
+          <h3 data-i18n="news-1-title">Wreath Festival dates announced</h3>
+          <p data-i18n="news-1-body">The annual Laurel &amp; Rabbit Wreath Festival returns this autumn, with parades along the coast road and free cheese samples for all visitors.</p>
+          <a href="#" class="card-link" data-i18n="read-more">Read more →</a>
+        </article>
+        <article class="card">
+          <p class="card-date">03 Jul</p>
+          <h3 data-i18n="news-2-title">New coastal path opens</h3>
+          <p data-i18n="news-2-body">A new walking route now connects the harbour to the old town, with viewpoints over the Laurel Coast along the way.</p>
+          <a href="#" class="card-link" data-i18n="read-more">Read more →</a>
+        </article>
+        <article class="card">
+          <p class="card-date">21 Jun</p>
+          <h3 data-i18n="news-3-title">Núnúise dictionary keeps growing</h3>
+          <p data-i18n="news-3-body">Our national dictionary has passed 200 words. Try the language switcher below to see it in action.</p>
+          <a href="#" class="card-link" data-i18n="read-more">Read more →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="culture" class="section section-alt">
+    <div class="section-inner">
+      <p class="eyebrow" data-i18n="culture-eyebrow">See &amp; Do</p>
+      <h2 data-i18n="culture-heading">Tourism &amp; Culture</h2>
+
+      <div class="card-grid">
+        <article class="card">
+          <div class="card-icon" aria-hidden="true">🐇</div>
+          <h3 data-i18n="culture-1-title">The National Emblem</h3>
+          <p data-i18n="culture-1-body">Our coat of arms — a rabbit resting inside a laurel wreath — appears on everything from passports to lampposts. Spot it around the capital.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon" aria-hidden="true">🌊</div>
+          <h3 data-i18n="culture-2-title">The Laurel Coast</h3>
+          <p data-i18n="culture-2-body">Cliffside villages, quiet coves, and the country's best sunsets. Bring a coat — the wind has opinions.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon" aria-hidden="true">🧀</div>
+          <h3 data-i18n="culture-3-title">Núnúian Cuisine</h3>
+          <p data-i18n="culture-3-body">Don't leave without trying local bread, cheese, and chips — three words you'll learn in Núnúise before you learn "hello."</p>
+        </article>
+        <article class="card">
+          <div class="card-icon" aria-hidden="true">🗣️</div>
+          <h3 data-i18n="culture-4-title">The Núnúise Language</h3>
+          <p data-i18n="culture-4-body">A young, homegrown language still growing word by word. Switch this page to Núnúise below to hear it in action.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="map" class="section">
+    <div class="section-inner">
+      <p class="eyebrow" data-i18n="map-eyebrow">Find Your Way</p>
+      <h2 data-i18n="map-heading">Explore the Map</h2>
+      <p class="map-intro" data-i18n="map-intro">A hand-drawn map of the Kingdom is on its way. In the meantime, here's a preview of how regions will be marked.</p>
+
+      <div class="map-layout">
+        <div class="map-frame" id="map-frame">
+          <div class="map-placeholder-text" id="map-placeholder-text" data-i18n="map-placeholder">
+            Your hand-drawn map will appear here soon.
+          </div>
+          <!-- Markers are positioned by script.js using percentage coordinates,
+               so they'll stay put once a real map image replaces the placeholder. -->
+        </div>
+        <ul class="map-legend" id="map-legend"></ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <img src="assets/img/coat-of-arms.png" alt="" class="footer-crest" aria-hidden="true">
+    <p class="footer-note" data-i18n="footer-note">Kingdom of Núnúia is a fictional country, made for fun. Not a real government, and no cheese was harmed in the making of this website.</p>
+
+    <div class="lang-switcher" role="group" aria-label="Language selector">
+      <span class="lang-label" data-i18n="lang-label">Language:</span>
+      <button type="button" class="lang-btn is-active" data-lang="en">English</button>
+      <button type="button" class="lang-btn" data-lang="fr">Français</button>
+      <button type="button" class="lang-btn" data-lang="nu">Núnúise (beta)</button>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
