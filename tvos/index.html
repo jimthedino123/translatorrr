@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aperture</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="boot.css">
+<link rel="stylesheet" id="themeLink" href="themes/dark.css">
+</head>
+<body>
+
+<div class="display" id="display">
+
+  <div class="boot" id="boot">
+    <div class="boot-modern">
+      <div class="boot-mark"><span></span></div>
+      <div class="boot-word">Aperture</div>
+      <div class="boot-ver" id="bootVersion">Aperture OS 5.3</div>
+    </div>
+    <div class="boot-retro">
+      <div class="boot-retro-lines" id="bootRetroLines"></div>
+      <span class="boot-retro-cursor">_</span>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <div class="device-id">
+      <div class="name" id="deviceName">Living Room</div>
+      <div class="sub" id="versionLabel">Aperture OS 5.3</div>
+    </div>
+    <div class="status-right">
+      <div class="tray" id="tray"></div>
+      <div class="glyphs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8.5a16 16 0 0 1 20 0M5.5 12a11 11 0 0 1 13 0M9 15.5a6 6 0 0 1 6 0"/><circle cx="12" cy="19" r="1" fill="currentColor" stroke="none"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="10" width="3" height="8"/><rect x="9" y="6" width="3" height="12"/><rect x="15" y="2" width="3" height="16"/></svg>
+      </div>
+      <div class="clock" id="clock">12:00</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow-free" id="greeting">Good evening</div>
+    <h1>What would you like to watch?</h1>
+  </div>
+
+  <div class="dock-wrap">
+    <div class="dock" id="dock">
+      <div class="tile" data-app="play" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <div class="label">Play</div>
+      </div>
+      <div class="tile" data-app="browse" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9.5" r="7"/><path d="M12 2.5v14M5.5 6.5c2 1.3 4.3 2 6.5 2s4.5-.7 6.5-2M5.5 12.5c2-1.3 4.3-2 6.5-2s4.5.7 6.5 2"/></svg>
+        <div class="label">Melon</div>
+      </div>
+      <div class="tile" data-app="movies" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M16 4v5"/></svg>
+        <div class="label">Movies</div>
+      </div>
+      <div class="tile" data-app="music" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>
+        <div class="label">Music</div>
+      </div>
+      <div class="tile" data-app="news" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h6M7 12h10M7 16h10"/></svg>
+        <div class="label">News</div>
+      </div>
+      <div class="tile" data-app="weather" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.5 18a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.6-1.5A4.5 4.5 0 0 0 7.5 18h10z"/></svg>
+        <div class="label">Weather</div>
+      </div>
+      <div class="tile" data-app="photos" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg>
+        <div class="label">Photos</div>
+      </div>
+      <div class="tile" data-app="terminal" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg>
+        <div class="label">Terminal</div>
+      </div>
+      <div class="tile" data-app="settings" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>
+        <div class="label">Settings</div>
+      </div>
+      <div class="tile" data-app="uru" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a7 7 0 0 1 7 7c0 2.4-1.2 4.1-2.4 5.3-.7.7-1.1 1.6-1.1 2.5V19a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1.2c0-.9-.4-1.8-1.1-2.5C6.2 14.1 5 12.4 5 10a7 7 0 0 1 7-7z"/><path d="M9.5 21h5"/><circle cx="9.5" cy="10" r="0.8" fill="currentColor" stroke="none"/><circle cx="14.5" cy="10" r="0.8" fill="currentColor" stroke="none"/></svg>
+        <div class="label">Uru</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint"><kbd>←</kbd><kbd>→</kbd> browse &nbsp; <kbd>Enter</kbd> open &nbsp; <kbd>Esc</kbd> minimize</div>
+
+  <!-- ============ PLAY ============ -->
+  <div class="win" id="win-play">
+    <div class="win-head" style="--c:var(--c-play)">
+      <div class="win-title"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><span>Play</span></div>
+      <div class="win-ctrl">
+        <div class="win-btn" data-action="minimize" data-app="play" title="Minimize"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+        <div class="win-btn" data-action="close" data-app="play" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+    </div>
+    <div class="win-body">
+      <div class="play-stage"><iframe id="playFrame" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+      <div class="play-rail" id="playRail"></div>
+    </div>
+  </div>
+
+  <!-- ============ MELON (browser) ============ -->
+  <div class="win" id="win-browse">
+    <div class="win-head" style="--c:var(--c-browse)">
+      <div class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9.5" r="7"/><path d="M12 2.5v14M5.5 6.5c2 1.3 4.3 2 6.5 2s4.5-.7 6.5-2M5.5 12.5c2-1.3 4.3-2 6.5-2s4.5.7 6.5 2"/></svg><span>Melon</span></div>
+      <div class="win-ctrl">
+        <div class="win-btn" data-action="minimize" data-app="browse" title="Minimize"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+        <div class="win-btn" data-action="close" data-app="browse" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+    </div>
+    <div class="win-body">
+      <div class="browse-bar">
+        <button id="browseBack" title="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button id="browseHome" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v9h14v-9"/></svg></button>
+        <button id="browseReload" title="Reload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v6h-6"/></svg></button>
+        <input class="browse-url" id="browseUrl" placeholder="Search or enter address" />
+      </div>
+      <div class="browse-start" id="browseStart">
+        <div class="browse-wordmark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9.5" r="7"/><path d="M12 2.5v14M5.5 6.5c2 1.3 4.3 2 6.5 2s4.5-.7 6.5-2M5.5 12.5c2-1.3 4.3-2 6.5-2s4.5.7 6.5 2"/></svg>
+          Melon
+        </div>
+        <div class="browse-tagline">fast. simple. slightly seedy.</div>
+        <div class="bk">
+          <div class="bk-item" data-url="https://en.wikipedia.org">Wikipedia</div>
+          <div class="bk-item" data-url="https://example.com">Example</div>
+          <div class="bk-item" data-url="https://old.reddit.com">Old Reddit</div>
+        </div>
+        <div class="browse-note">Some sites block being shown inside another page — if a page won't load, try another address.</div>
+      </div>
+      <iframe class="browse-frame" id="browseFrame" style="display:none"></iframe>
+    </div>
+  </div>
+
+  <!-- ============ MOVIES ============ -->
+  <div class="win" id="win-movies">
+    <div class="win-head" style="--c:var(--c-movies)">
+      <div class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M16 4v5"/></svg><span>Movies</span></div>
+      <div class="win-ctrl">
+        <div class="win-btn" data-action="minimize" data-app="movies" title="Minimize"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+        <div class="win-btn" data-action="close" data-app="movies" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+    </div>
+    <div class="win-body"><div class="movies-grid" id="moviesGrid"></div></div>
+  </div>
+
+  <!-- ============ MUSIC ============ -->
+  <div class="win" id="win-music">
+    <div class="win-head" style="--c:var(--c-music)">
+      <div class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg><span>Music</span></div>
+      <div class="win-ctrl">
+        <div class="win-btn" data-action="minimize" data-app="music" title="Minimize"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+        <div class="win-btn" data-action="close" data-app="music" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+    </div>
+    <div class="win-body music-body">
+      <div class="music-list" id="musicList"></div>
+      <div class="music-now">
+        <img id="musicArt" src="" alt="">
+        <div class="music-bars" id="musicBars"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="music-play" id="musicPlay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ NEWS ============ -->
+  <div class="win" id="win-news">
+    <div class="win-head" style="--c:var(--c-news)">
+      <div class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h6M7 12h10M7 16h10"/></svg><span>News</span></div>
+      <div class="win-ctrl">
+        <div class="win-btn" data-action="minimize" data-app="news" title="Minimize"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+        <div class="win-btn" data-action="close" data-app="news" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+    </div>
+    <div class="win-body"><div class="news-list" id="newsList"><div class="news-state">Loading headlines…</div></div></div>
+  </div>
+
+  <!-- ============ WEATHER ============ -->
+  <div class="win" id="win-weather">
+    <div class="win-head" style="--c:var(--c-weather)">
+      <div class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.5 18a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.6-1.5A4.5 4.5 0 0 0 7.5 18h10z"/></svg><span>Weather</span></div>
+      <div class="win-ctrl">
+        <div class="win-btn" data-action="minimize" data-app="weather" title="Minimize"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+        <div class="win-btn" data-action="close" data-app="weather" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+    </div>
+    <div class="win-body"><div class="weather-body" id="weatherBody"><div class="weather-state">Finding your local weather…</div></div></div>
+  </div>
+
+  <!-- ============ PHOTOS ============ -->
+  <div class="win" id="win-photos">
+    <div class="win-head" style="--c:var(--c-photos)">
+      <div class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M3 16l5-5 4 4 3-3 6 6"/></svg><span>Photos</span></div>
+      <div class="win-ctrl">
+        <div class="win-btn" data-action="minimize" data-app="photos" title="Minimize"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+        <div class="win-btn" data-action="close" data-app="photos" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+    </div>
+    <div class="win-body"><div class="photos-grid" id="photosGrid"></div></div>
+  </div>
+
+  <!-- ============ TERMINAL ============ -->
+  <div class="win" id="win-terminal">
+    <div class="win-head" style="--c:var(--c-terminal)">
+      <div class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/></svg><span>Terminal</span></div>
+      <div class="win-ctrl">
+        <div class="win-btn" data-action="minimize" data-app="terminal" title="Minimize"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+        <div class="win-btn" data-action="close" data-app="terminal" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+    </div>
+    <div class="win-body term-body">
+      <div class="term-output" id="termOutput"></div>
+      <div class="term-input-row">
+        <span class="prompt">$</span>
+        <input id="termInput" placeholder="type a command…" autocomplete="off" spellcheck="false" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SETTINGS ============ -->
+  <div class="win" id="win-settings">
+    <div class="win-head" style="--c:var(--c-settings)">
+      <div class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg><span>Settings</span></div>
+      <div class="win-ctrl">
+        <div class="win-btn" data-action="minimize" data-app="settings" title="Minimize"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+        <div class="win-btn" data-action="close" data-app="settings" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+    </div>
+    <div class="win-body">
+      <div class="settings-body">
+        <div class="set-group">
+          <div class="set-label">About this device</div>
+          <div class="set-row"><div class="n">Device name</div><div class="v" id="setDeviceName">—</div></div>
+          <div class="set-row tappable"><div class="n">Software version</div><div class="v" id="setVersion">—</div></div>
+          <div class="set-row"><div class="n">Display size</div><div class="v" id="setRes">—</div></div>
+        </div>
+        <div class="set-group">
+          <div class="set-label">Appearance</div>
+          <div class="theme-row" id="themeRow">
+            <div class="theme-swatch" data-theme="dark"><div class="sw" style="background:linear-gradient(135deg,#0b0f1e,#1b2340);"></div><div class="lbl">Dark</div></div>
+            <div class="theme-swatch" data-theme="light"><div class="sw" style="background:linear-gradient(135deg,#f6f7fb,#e2e6f5);"></div><div class="lbl">Light</div></div>
+            <div class="theme-swatch" data-theme="blurple"><div class="sw" style="background:linear-gradient(135deg,#1c1150,#5a2fb0);"></div><div class="lbl">Blurple</div></div>
+            <div class="theme-swatch" data-theme="oldskool"><div class="sw" style="background:linear-gradient(135deg,#03100a,#0c2b18);"></div><div class="lbl">Oldskool</div></div>
+          </div>
+          <div class="theme-actions">
+            <button id="themeSave">Save as style.css</button>
+            <label class="theme-upload-label">Upload custom theme<input type="file" id="themeUpload" accept=".css" hidden></label>
+          </div>
+          <div class="theme-note" id="themeNote">Saving downloads the active theme's colors as <code>style.css</code> — drop it back into this app's folder to make it the default.</div>
+        </div>
+        <div class="set-group">
+          <div class="set-label">Preferences</div>
+          <div class="set-row"><div class="n">Ambient motion</div><div class="switch on" data-pref="motion"></div></div>
+          <div class="set-row"><div class="n">Autoplay previews</div><div class="switch on" data-pref="autoplay"></div></div>
+          <div class="set-row"><div class="n">Reduce animations</div><div class="switch" data-pref="reduce"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ URU ============ -->
+  <div class="win" id="win-uru">
+    <div class="win-head" style="--c:var(--c-uru)">
+      <div class="win-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a7 7 0 0 1 7 7c0 2.4-1.2 4.1-2.4 5.3-.7.7-1.1 1.6-1.1 2.5V19a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1v-1.2c0-.9-.4-1.8-1.1-2.5C6.2 14.1 5 12.4 5 10a7 7 0 0 1 7-7z"/><path d="M9.5 21h5"/><circle cx="9.5" cy="10" r="0.8" fill="currentColor" stroke="none"/><circle cx="14.5" cy="10" r="0.8" fill="currentColor" stroke="none"/></svg><span>Uru</span></div>
+      <div class="win-ctrl">
+        <div class="win-btn" data-action="minimize" data-app="uru" title="Minimize"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></div>
+        <div class="win-btn" data-action="close" data-app="uru" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      </div>
+    </div>
+    <div class="win-body">
+      <div class="uru-log" id="uruLog"><div class="uru-msg sys">Uru runs on your own machine via Ollama (llama3.2:1b) — nothing is sent anywhere else.</div></div>
+      <div class="uru-input-row">
+        <input id="uruInput" placeholder="Ask Uru something…" />
+        <button id="uruSend"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ EASTER EGG ============ -->
+  <div class="easter-overlay" id="easterOverlay">
+    <iframe id="easterFrame" src="about:blank"></iframe>
+  </div>
+
+</div>
+
+<script>
+  // ---- edit these two lines to rebrand the device ----
+  const DEVICE_NAME = "Living Room";
+  const OS_VERSION  = "Aperture OS 5.3";
+
+  document.getElementById('deviceName').textContent = DEVICE_NAME;
+  document.getElementById('versionLabel').textContent = OS_VERSION;
+  document.getElementById('bootVersion').textContent = OS_VERSION;
+  document.getElementById('setDeviceName').textContent = DEVICE_NAME;
+  document.getElementById('setVersion').textContent = OS_VERSION;
+
+  // ============ THEME MANAGER ============
+  const THEME_KEY = 'aperture-theme';
+  const CUSTOM_CSS_KEY = 'aperture-theme-custom-css';
+  const themeLink = document.getElementById('themeLink');
+  const BUILTIN_THEMES = ['dark','light','blurple','oldskool'];
+
+  function updateThemeUI(active){
+    document.querySelectorAll('.theme-swatch').forEach(s => s.classList.toggle('active', s.dataset.theme === active));
+  }
+  function applyBuiltinTheme(name, persist=true){
+    document.documentElement.dataset.theme = name;
+    themeLink.href = 'themes/' + name + '.css';
+    if(persist){ localStorage.setItem(THEME_KEY, name); localStorage.removeItem(CUSTOM_CSS_KEY); }
+    updateThemeUI(name);
+  }
+  function applyCustomTheme(cssText, persist=true){
+    const blob = new Blob([cssText], { type:'text/css' });
+    themeLink.href = URL.createObjectURL(blob);
+    document.documentElement.dataset.theme = 'custom';
+    if(persist){ localStorage.setItem(THEME_KEY, 'custom'); localStorage.setItem(CUSTOM_CSS_KEY, cssText); }
+    updateThemeUI('custom');
+  }
+  async function saveThemeAsFile(){
+    let cssText;
+    const active = document.documentElement.dataset.theme;
+    if(active === 'custom'){
+      cssText = localStorage.getItem(CUSTOM_CSS_KEY) || '';
+    } else {
+      try{ cssText = await fetch(themeLink.href).then(r => r.text()); }
+      catch(e){
+        document.getElementById('themeNote').textContent = "Couldn't read that theme file directly — this can happen when the page is opened straight from disk rather than through a server. Grab the matching file from the themes folder instead.";
+        return;
+      }
+    }
+    const blob = new Blob([cssText], { type:'text/css' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'style.css';
+    a.click();
+  }
+  function handleThemeUpload(file){
+    const reader = new FileReader();
+    reader.onload = () => applyCustomTheme(reader.result);
+    reader.readAsText(file);
+  }
+  (function restoreTheme(){
+    const saved = localStorage.getItem(THEME_KEY);
+    if(saved === 'custom'){
+      const css = localStorage.getItem(CUSTOM_CSS_KEY);
+      css ? applyCustomTheme(css, false) : applyBuiltinTheme('dark', false);
+    } else if(saved && BUILTIN_THEMES.includes(saved)){
+      applyBuiltinTheme(saved, false);
+    } else {
+      document.documentElement.dataset.theme = 'dark';
+      updateThemeUI('dark');
+    }
+  })();
+
+  // ============ BOOT ============
+  const retroLines = [ OS_VERSION.toUpperCase(), 'MEMORY CHECK....OK', 'LOADING KERNEL....OK', 'STARTING SHELL....OK' ];
+  const bootLinesEl = document.getElementById('bootRetroLines');
+  retroLines.forEach((line, i) => {
+    setTimeout(() => { bootLinesEl.textContent += (i ? '\n' : '') + line; }, i * 160);
+  });
+  setTimeout(() => { const b = document.getElementById('boot'); if(b) b.remove(); }, 950);
+
+  // ============ DOCK NAVIGATION ============
+  const tiles = Array.from(document.querySelectorAll('.tile'));
+  const dockCols = () => Math.max(1, Math.round(document.getElementById('dock').clientWidth / tiles[0].getBoundingClientRect().width));
+  let focused = 0;
+  let dockActive = true;
+
+  function setFocus(i){
+    tiles[focused]?.classList.remove('focused');
+    focused = (i + tiles.length) % tiles.length;
+    tiles[focused].classList.add('focused');
+    tiles[focused].focus({preventScroll:true});
+  }
+  setFocus(0);
+
+  document.addEventListener('keydown', (e) => {
+    if(document.getElementById('easterOverlay').classList.contains('open')){
+      if(e.key === 'Escape') closeEasterEgg();
+      return;
+    }
+    if(!dockActive){
+      if(e.key === 'Escape'){ const open = document.querySelector('.win.open'); if(open) minimizeApp(open.id.replace('win-','')); }
+      return;
+    }
+    const cols = dockCols();
+    if(e.key === 'ArrowRight'){ setFocus(focused+1); e.preventDefault(); }
+    if(e.key === 'ArrowLeft'){ setFocus(focused-1); e.preventDefault(); }
+    if(e.key === 'ArrowDown'){ setFocus(focused+cols); e.preventDefault(); }
+    if(e.key === 'ArrowUp'){ setFocus(focused-cols); e.preventDefault(); }
+    if(e.key === 'Enter'){ openApp(tiles[focused].dataset.app); }
+  });
+  tiles.forEach((t, i) => {
+    t.addEventListener('mouseenter', () => setFocus(i));
+    t.addEventListener('click', () => { setFocus(i); openApp(t.dataset.app); });
+  });
+
+  // ============ WINDOW MANAGER ============
+  const running = new Set();
+  const initialized = new Set();
+  const appMeta = {};
+  tiles.forEach(t => { appMeta[t.dataset.app] = { icon: t.querySelector('svg').outerHTML }; });
+
+  function renderTray(){
+    const tray = document.getElementById('tray');
+    tray.innerHTML = '';
+    running.forEach(app => {
+      const win = document.getElementById('win-'+app);
+      const pill = document.createElement('div');
+      pill.className = 'tray-pill' + (win.classList.contains('open') ? ' active' : '');
+      const tile = tiles.find(t => t.dataset.app === app);
+      pill.style.setProperty('--c', getComputedStyle(tile).getPropertyValue('--tile-c'));
+      pill.innerHTML = appMeta[app].icon;
+      pill.title = app;
+      pill.addEventListener('click', () => win.classList.contains('open') ? minimizeApp(app) : openApp(app));
+      tray.appendChild(pill);
+    });
+  }
+  function openApp(app){
+    document.querySelectorAll('.win.open').forEach(w => { if(w.id !== 'win-'+app) w.classList.remove('open'); });
+    const win = document.getElementById('win-'+app);
+    if(!initialized.has(app)){ initApp(app); initialized.add(app); }
+    win.classList.remove('minimized');
+    win.classList.add('open');
+    running.add(app);
+    dockActive = false;
+    renderTray();
+  }
+  function minimizeApp(app){
+    const win = document.getElementById('win-'+app);
+    win.classList.remove('open'); win.classList.add('minimized');
+    dockActive = true; setFocus(focused); renderTray();
+  }
+  function closeApp(app){
+    const win = document.getElementById('win-'+app);
+    win.classList.remove('open','minimized');
+    running.delete(app);
+    dockActive = true; setFocus(focused); renderTray();
+  }
+  document.querySelectorAll('[data-action="minimize"]').forEach(b => b.addEventListener('click', () => minimizeApp(b.dataset.app)));
+  document.querySelectorAll('[data-action="close"]').forEach(b => b.addEventListener('click', () => closeApp(b.dataset.app)));
+
+  function initApp(app){
+    ({ play:initPlay, browse:initBrowse, movies:initMovies, music:initMusic, news:initNews,
+       weather:initWeather, photos:initPhotos, terminal:initTerminal, settings:initSettings, uru:initUru
+    })[app]?.();
+  }
+
+  // ============ PLAY ============
+  function initPlay(){
+    const videos = [
+      { id:'aqz-KE-bpKQ', title:'Big Buck Bunny' },
+      { id:'eRsGyueVLvQ', title:'Sintel' },
+      { id:'R6MlUcmOul8', title:'Tears of Steel' },
+      { id:'TLkA0RELQ1g', title:'Elephants Dream' },
+    ];
+    const rail = document.getElementById('playRail');
+    const frame = document.getElementById('playFrame');
+    function play(i){
+      frame.src = 'https://www.youtube.com/embed/'+videos[i].id+'?autoplay=1&rel=0';
+      rail.querySelectorAll('.play-card').forEach((c,ci)=>c.classList.toggle('active', ci===i));
+    }
+    videos.forEach((v,i) => {
+      const card = document.createElement('div');
+      card.className = 'play-card';
+      card.innerHTML = `<img src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg" alt=""><div class="t">${v.title}</div>`;
+      card.addEventListener('click', () => play(i));
+      rail.appendChild(card);
+    });
+    play(0);
+  }
+
+  // ============ MELON (browser) ============
+  function initBrowse(){
+    const url = document.getElementById('browseUrl');
+    const frame = document.getElementById('browseFrame');
+    const start = document.getElementById('browseStart');
+    let history = [];
+    function go(target){
+      let u = target.trim();
+      if(!/^https?:\/\//i.test(u)) u = 'https://' + u;
+      frame.src = u; frame.style.display = 'block'; start.style.display = 'none';
+      url.value = u; history.push(u);
+    }
+    document.querySelectorAll('.bk-item').forEach(b => b.addEventListener('click', () => go(b.dataset.url)));
+    url.addEventListener('keydown', (e) => { if(e.key === 'Enter') go(url.value); });
+    document.getElementById('browseHome').addEventListener('click', () => {
+      frame.style.display = 'none'; frame.src = 'about:blank'; start.style.display = 'flex'; url.value = '';
+    });
+    document.getElementById('browseReload').addEventListener('click', () => { if(frame.src && frame.src !== 'about:blank') frame.src = frame.src; });
+    document.getElementById('browseBack').addEventListener('click', () => {
+      history.pop();
+      const prev = history.pop();
+      prev ? go(prev) : document.getElementById('browseHome').click();
+    });
+  }
+
+  // ============ MOVIES ============
+  function initMovies(){
+    const catalog = [
+      { t:'Verdant Static', g:'Sci-Fi' }, { t:'Low Tide Radio', g:'Drama' },
+      { t:'Copper Hour', g:'Thriller' }, { t:'Nine Slow Rivers', g:'Documentary' },
+      { t:'Marigold Protocol', g:'Action' }, { t:'The Quiet Machinist', g:'Drama' },
+      { t:'Halflight District', g:'Mystery' }, { t:'Paper Weather', g:'Romance' },
+      { t:'Signal & Ash', g:'Sci-Fi' }, { t:'Borrowed Winters', g:'Drama' },
+    ];
+    const grid = document.getElementById('moviesGrid');
+    catalog.forEach((m, i) => {
+      const card = document.createElement('div');
+      card.className = 'movie-card';
+      card.innerHTML = `<img src="https://picsum.photos/seed/aperture-${i}/300/450" alt=""><div class="t">${m.t}</div><div class="g">${m.g}</div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  // ============ MUSIC ============
+  function initMusic(){
+    const tracks = [
+      { t:'Amber Static', a:'Loop Season' }, { t:'Rooftop, 2AM', a:'Kilo Vega' },
+      { t:'Slow Orbit', a:'Nine Rivers' }, { t:'Glass Weather', a:'Loop Season' },
+      { t:'Paper Tigers', a:'Marin Ode' }, { t:'Low Fidelity Sun', a:'Kilo Vega' },
+    ];
+    const list = document.getElementById('musicList');
+    const art = document.getElementById('musicArt');
+    const playBtn = document.getElementById('musicPlay');
+    const bars = document.getElementById('musicBars');
+    let playing = false;
+    function select(i){
+      list.querySelectorAll('.music-row').forEach((r,ri)=>r.classList.toggle('active', ri===i));
+      art.src = `https://picsum.photos/seed/aperture-track-${i}/300/300`;
+    }
+    tracks.forEach((tr,i) => {
+      const row = document.createElement('div');
+      row.className = 'music-row';
+      row.innerHTML = `<img src="https://picsum.photos/seed/aperture-track-${i}/80/80" alt=""><div class="m"><div class="mt">${tr.t}</div><div class="ma">${tr.a}</div></div>`;
+      row.addEventListener('click', () => { select(i); playing = true; bars.style.opacity = 1; });
+      list.appendChild(row);
+    });
+    select(0); bars.style.opacity = 0.3;
+    playBtn.addEventListener('click', () => {
+      playing = !playing;
+      bars.style.opacity = playing ? 1 : 0.3;
+      playBtn.innerHTML = playing
+        ? '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+    });
+  }
+
+  // ============ NEWS ============
+  function initNews(){
+    const list = document.getElementById('newsList');
+    fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
+      .then(r => r.json())
+      .then(ids => Promise.all(ids.slice(0,10).map(id => fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`).then(r=>r.json()))))
+      .then(items => {
+        list.innerHTML = '';
+        items.forEach((it,i) => {
+          if(!it) return;
+          const row = document.createElement('a');
+          row.className = 'news-row'; row.href = it.url || `https://news.ycombinator.com/item?id=${it.id}`;
+          row.target = '_blank'; row.rel = 'noopener';
+          row.innerHTML = `<div class="n">${String(i+1).padStart(2,'0')}</div><div><div class="h">${it.title}</div><div class="s">${it.score||0} points &middot; ${it.by||''}</div></div>`;
+          list.appendChild(row);
+        });
+      })
+      .catch(() => { list.innerHTML = '<div class="news-state">Couldn\'t reach the news service — check your connection.</div>'; });
+  }
+
+  // ============ WEATHER ============
+  const WMO = {
+    0:['Clear sky','☀️'],1:['Mostly clear','🌤️'],2:['Partly cloudy','⛅'],3:['Overcast','☁️'],
+    45:['Fog','🌫️'],48:['Fog','🌫️'],51:['Light drizzle','🌦️'],61:['Rain','🌧️'],63:['Rain','🌧️'],
+    65:['Heavy rain','🌧️'],71:['Snow','🌨️'],73:['Snow','🌨️'],75:['Heavy snow','🌨️'],
+    80:['Rain showers','🌦️'],95:['Thunderstorm','⛈️']
+  };
+  function wmoLookup(code){ return WMO[code] || ['Unsettled','🌡️']; }
+  function initWeather(){
+    const body = document.getElementById('weatherBody');
+    function render(lat, lon, place){
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`)
+        .then(r => r.json())
+        .then(d => {
+          const cur = d.current;
+          const [desc, icon] = wmoLookup(cur.weather_code);
+          const days = d.daily.time.slice(0,5).map((date, i) => {
+            const [dd, ii] = wmoLookup(d.daily.weather_code[i]);
+            const label = new Date(date).toLocaleDateString(undefined, { weekday:'short' });
+            return `<div class="weather-day"><div class="d">${label}</div><div class="i">${ii}</div><div class="r"><span class="hi">${Math.round(d.daily.temperature_2m_max[i])}°</span> <span class="lo">${Math.round(d.daily.temperature_2m_min[i])}°</span></div></div>`;
+          }).join('');
+          body.innerHTML = `
+            <div class="weather-now">
+              <div class="icon">${icon}</div>
+              <div>
+                <div class="temp">${Math.round(cur.temperature_2m)}°</div>
+                <div class="desc">${desc}</div>
+                <div class="place">${place}</div>
+              </div>
+            </div>
+            <div class="weather-meta"><div>Wind <b>${Math.round(cur.wind_speed_10m)} km/h</b></div></div>
+            <div class="weather-days">${days}</div>`;
+        })
+        .catch(() => { body.innerHTML = '<div class="weather-state">Couldn\'t reach the weather service.</div>'; });
+    }
+    if(navigator.geolocation){
+      const timer = setTimeout(() => render(40.71, -74.01, 'Default location'), 3000);
+      navigator.geolocation.getCurrentPosition(
+        pos => { clearTimeout(timer); render(pos.coords.latitude, pos.coords.longitude, 'Your location'); },
+        () => { clearTimeout(timer); render(40.71, -74.01, 'Default location'); },
+        { timeout: 3000 }
+      );
+    } else {
+      render(40.71, -74.01, 'Default location');
+    }
+  }
+
+  // ============ PHOTOS ============
+  function initPhotos(){
+    const grid = document.getElementById('photosGrid');
+    const captions = ['Aperture Moments','Backyard, golden hour','Weekend hike','City lights','Studio test shot','Rooftop view','Quiet morning','Old friends'];
+    captions.forEach((c,i) => {
+      const card = document.createElement('div');
+      card.className = 'photo-card';
+      card.innerHTML = `<img src="https://picsum.photos/seed/aperture-photo-${i}/500/375" alt=""><div class="cap">${c}</div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  // ============ TERMINAL ============
+  function initTerminal(){
+    const out = document.getElementById('termOutput');
+    const input = document.getElementById('termInput');
+    function printLine(text, cls){
+      const div = document.createElement('div');
+      if(cls) div.className = cls;
+      div.textContent = text;
+      out.appendChild(div);
+      out.scrollTop = out.scrollHeight;
+    }
+    printLine('Aperture Terminal — connected to your CachyOS shell.', 'term-sys');
+    async function run(cmd){
+      printLine('$ ' + cmd, 'term-cmd');
+      try{
+        const res = await fetch('/api/run', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({cmd}) });
+        const data = await res.json();
+        printLine(data.output);
+      }catch(e){
+        printLine('This terminal only works inside the Aperture OS desktop app — it needs the local command bridge that app.py runs.', 'term-sys');
+      }
+    }
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' && input.value.trim()){ const cmd = input.value; input.value = ''; run(cmd); }
+    });
+  }
+
+  // ============ SETTINGS ============
+  let versionTapCount = 0;
+  let versionTapTimer = null;
+  function initSettings(){
+    function updateRes(){ document.getElementById('setRes').textContent = window.innerWidth + ' × ' + window.innerHeight; }
+    updateRes();
+    window.addEventListener('resize', updateRes);
+    document.querySelectorAll('.switch[data-pref]').forEach(sw => sw.addEventListener('click', () => sw.classList.toggle('on')));
+
+    document.querySelectorAll('.theme-swatch').forEach(sw => sw.addEventListener('click', () => applyBuiltinTheme(sw.dataset.theme)));
+    document.getElementById('themeSave').addEventListener('click', saveThemeAsFile);
+    document.getElementById('themeUpload').addEventListener('change', (e) => { if(e.target.files[0]) handleThemeUpload(e.target.files[0]); });
+
+    document.getElementById('setVersion').addEventListener('click', () => {
+      versionTapCount++;
+      clearTimeout(versionTapTimer);
+      versionTapTimer = setTimeout(() => { versionTapCount = 0; }, 2500);
+      if(versionTapCount >= 10){ versionTapCount = 0; openEasterEgg(); }
+    });
+  }
+
+  // ============ EASTER EGG ============
+  function openEasterEgg(){
+    const overlay = document.getElementById('easterOverlay');
+    document.getElementById('easterFrame').src = 'credits.html';
+    overlay.classList.add('open');
+  }
+  function closeEasterEgg(){
+    const overlay = document.getElementById('easterOverlay');
+    overlay.classList.remove('open');
+    document.getElementById('easterFrame').src = 'about:blank';
+  }
+  window.addEventListener('message', (e) => { if(e.data && e.data.type === 'aperture-exit-credits') closeEasterEgg(); });
+
+  // ============ URU (Ollama chat) ============
+  const OLLAMA_URL = 'http://localhost:11434/api/chat';
+  const OLLAMA_MODEL = 'llama3.2:1b';
+  let uruHistory = [];
+  function initUru(){
+    const log = document.getElementById('uruLog');
+    const input = document.getElementById('uruInput');
+    const send = document.getElementById('uruSend');
+    function addMsg(role, text){
+      const div = document.createElement('div');
+      div.className = 'uru-msg ' + role;
+      div.textContent = text;
+      log.appendChild(div); log.scrollTop = log.scrollHeight;
+    }
+    async function sendMessage(){
+      const text = input.value.trim();
+      if(!text) return;
+      input.value = ''; addMsg('user', text);
+      uruHistory.push({ role:'user', content:text });
+      const typing = document.createElement('div');
+      typing.className = 'uru-typing'; typing.innerHTML = '<i></i><i></i><i></i>';
+      log.appendChild(typing); log.scrollTop = log.scrollHeight;
+      try{
+        const res = await fetch(OLLAMA_URL, { method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ model: OLLAMA_MODEL, messages: uruHistory, stream:false }) });
+        if(!res.ok) throw new Error('status ' + res.status);
+        const data = await res.json();
+        typing.remove();
+        const reply = data?.message?.content || '(no response)';
+        addMsg('bot', reply);
+        uruHistory.push({ role:'assistant', content:reply });
+      }catch(err){
+        typing.remove();
+        addMsg('sys', "Couldn't reach Ollama at localhost:11434. Make sure it's running (ollama serve), the model is pulled (ollama pull llama3.2:1b), and — since this page isn't served from localhost — Ollama allows this origin: run it with OLLAMA_ORIGINS=* ollama serve.");
+      }
+    }
+    send.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', (e) => { if(e.key === 'Enter') sendMessage(); });
+  }
+
+  // ============ CLOCK ============
+  function tick(){
+    const d = new Date();
+    let h = d.getHours(), m = d.getMinutes();
+    document.getElementById('clock').textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+    const g = document.getElementById('greeting');
+    g.textContent = h < 5 ? 'Still up' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+  }
+  tick(); setInterval(tick, 15000);
+</script>
+</body>
+</html>
