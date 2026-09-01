@@ -1,0 +1,25 @@
+/* Aperture OS theme: Blurple (blue + purple) */
+:root{
+  --bg-0:#160e3a;
+  --bg-1:#241456;
+  --bg-2:#33196f;
+  --line: rgba(255,255,255,0.14);
+  --text-hi:#f4f1ff;
+  --text-lo:#bbaee6;
+
+  --c-play:#ff5da2;
+  --c-browse:#7ee0a8;
+  --c-movies:#c68bff;
+  --c-music:#3fe6c8;
+  --c-news:#ffd76a;
+  --c-weather:#4fd1ff;
+  --c-photos:#ff9ecb;
+  --c-terminal:#8ff5c2;
+  --c-settings:#cbb8ff;
+  --c-uru:#ff8fd6;
+
+  --radius-lg: 1.6rem;
+  --radius-md: 1.3rem;
+  --radius-sm: 0.9rem;
+  --radius-xs: 0.5rem;
+}

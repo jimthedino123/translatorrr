@@ -1,0 +1,46 @@
+/* Aperture OS theme: Oldskool (retro terminal) */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+:root{
+  --bg-0:#03100a;
+  --bg-1:#06190f;
+  --bg-2:#092214;
+  --line: rgba(125,255,176,0.25);
+  --text-hi:#8effc0;
+  --text-lo:#4f9a72;
+
+  --c-play:#ff5555;
+  --c-browse:#50fa7b;
+  --c-movies:#bd93f9;
+  --c-music:#50fa7b;
+  --c-news:#f1fa8c;
+  --c-weather:#63e6ff;
+  --c-photos:#ffb86c;
+  --c-terminal:#8effc0;
+  --c-settings:#8892b0;
+  --c-uru:#ff79c6;
+
+  --font-display:'VT323', 'Courier New', monospace;
+  --font-body:'VT323', 'Courier New', monospace;
+
+  --radius-lg: 0.15rem;
+  --radius-md: 0.1rem;
+  --radius-sm: 0.1rem;
+  --radius-xs: 0;
+}
+
+/* CRT flourishes — only meaningful while this theme file is loaded */
+.display::before{
+  content:"";
+  position:absolute; inset:0;
+  pointer-events:none;
+  z-index:1;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 2px, transparent 3px);
+  mix-blend-mode:multiply;
+}
+.hero h1, .win-title span, .device-id .name, .clock{
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+  text-shadow: 0 0 6px currentColor;
+}
+.win, .tile{ border-width:1px; }

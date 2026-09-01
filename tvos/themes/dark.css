@@ -1,0 +1,20 @@
+/* Aperture OS theme: Dark (default) */
+:root{
+  --bg-0:#080b14;
+  --bg-1:#10162a;
+  --bg-2:#171f3a;
+  --line: rgba(255,255,255,0.08);
+  --text-hi:#eef1fb;
+  --text-lo:#8891ab;
+
+  --c-play:#ff5f6d;
+  --c-browse:#7ed957;
+  --c-movies:#b18cff;
+  --c-music:#3fe0b0;
+  --c-news:#ffcf5c;
+  --c-weather:#5fb8ff;
+  --c-photos:#ff9f6e;
+  --c-terminal:#7dffb0;
+  --c-settings:#9aa5c0;
+  --c-uru:#ff6fb0;
+}

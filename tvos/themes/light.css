@@ -1,0 +1,20 @@
+/* Aperture OS theme: Light */
+:root{
+  --bg-0:#f6f7fb;
+  --bg-1:#eef0fa;
+  --bg-2:#e5e9f6;
+  --line: rgba(20,24,40,0.10);
+  --text-hi:#161a2c;
+  --text-lo:#5c637f;
+
+  --c-play:#e0384a;
+  --c-browse:#3a9c2f;
+  --c-movies:#7a4fe0;
+  --c-music:#0f9e7a;
+  --c-news:#c98a00;
+  --c-weather:#0f7fd1;
+  --c-photos:#d9662f;
+  --c-terminal:#1f8f5a;
+  --c-settings:#5c6480;
+  --c-uru:#d63c86;
+}
