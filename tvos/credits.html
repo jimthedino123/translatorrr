@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Credits</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500&family=JetBrains+Mono&display=swap');
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; height:100%; background:#05070d; color:#eef1fb; font-family:'Inter', sans-serif; overflow-y:auto; }
+  .wrap{ max-width:40rem; margin:0 auto; padding:4rem 2rem 6rem; }
+  .exit{ position:fixed; top:1.2rem; right:1.2rem; width:2.4rem; height:2.4rem; border-radius:50%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#eef1fb; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:5; }
+  .exit:hover{ background:rgba(255,255,255,0.15); }
+  .exit svg{ width:1rem; height:1rem; }
+
+  h1{ font-family:'Space Grotesk', sans-serif; font-size:1.8rem; margin:0 0 0.3rem; }
+  .sub{ color:#9aa5c0; font-size:0.9rem; margin-bottom:2.2rem; line-height:1.6; }
+
+  h2{ font-family:'Space Grotesk', sans-serif; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.08em; color:#8891ab; margin:2.4rem 0 0.9rem; }
+
+  .partners{ display:flex; flex-wrap:wrap; gap:0.8rem; }
+  .badge{ display:flex; flex-direction:column; align-items:center; gap:0.5rem; width:7.2rem; padding:1rem 0.6rem; border-radius:0.9rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); text-align:center; }
+  .badge .mark{ width:2.4rem; height:2.4rem; border-radius:0.6rem; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:0.85rem; }
+  .badge .name{ font-size:0.68rem; color:#eef1fb; }
+  .badge .role{ font-size:0.58rem; color:#8891ab; line-height:1.3; }
+
+  .legal{ font-family:'JetBrains Mono', monospace; font-size:0.68rem; line-height:1.8; color:#7c869e; white-space:pre-wrap; }
+  .legal b{ color:#aab2c9; font-weight:400; }
+
+  footer{ margin-top:2.6rem; font-size:0.68rem; color:#5c6480; }
+</style>
+</head>
+<body>
+<div class="exit" id="exitBtn" title="Exit">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+</div>
+
+<div class="wrap">
+  <h1>Aperture OS 5.3</h1>
+  <div class="sub">Made in collaboration between the old YK.tv team (now Aperture Televisions Company) and Melon Inc.</div>
+
+  <h2>Technology partners</h2>
+  <div class="partners">
+    <div class="badge">
+      <div class="mark" style="background:#0068b5;color:#fff;">intel</div>
+      <div class="name">Intel</div>
+      <div class="role">CPU, 2011 test unit</div>
+    </div>
+    <div class="badge">
+      <div class="mark" style="background:#000;color:#fff;border:1px solid #333;">AMD</div>
+      <div class="name">AMD</div>
+      <div class="role">Graphics, 2011 test unit</div>
+    </div>
+    <div class="badge">
+      <div class="mark" style="background:#7ed957;color:#0b1a06;">M</div>
+      <div class="name">Melon Inc.</div>
+      <div class="role">Browser &amp; snacks division</div>
+    </div>
+    <div class="badge">
+      <div class="mark" style="background:#3fe0b0;color:#04231b;">LS</div>
+      <div class="name">Loop Season</div>
+      <div class="role">Audio partner</div>
+    </div>
+    <div class="badge">
+      <div class="mark" style="background:#b18cff;color:#1c1233;">NR</div>
+      <div class="name">Nine Rivers Media</div>
+      <div class="role">Screening partner</div>
+    </div>
+    <div class="badge">
+      <div class="mark" style="background:#5fb8ff;color:#031b30;">WT</div>
+      <div class="name">WetTech</div>
+      <div class="role">Network partner</div>
+    </div>
+  </div>
+  <div style="font-size:0.62rem;color:#5c6480;margin-top:0.8rem;">Company names and marks shown above are used affectionately as fictional partners for this personal project and are not affiliated with or endorsed by their real-world namesakes.</div>
+
+  <h2>Legal &amp; copyright</h2>
+  <div class="legal" id="legalBlock"></div>
+
+  <footer>Aperture Televisions Company — a division of nothing in particular. Thanks for scrolling this far.</footer>
+</div>
+
+<script>
+  const legalLines = [
+    "© 2026 Aperture Televisions Company. All rights reserved, mostly out of habit.",
+    "HTML5 markup drafted, redrafted, and validated by nobody in particular.",
+    "CSS custom properties distributed under the Overengineering Public License v3.",
+    "JavaScript closures used with the informed consent of every variable involved.",
+    "Space Grotesk, Inter, VT323, and JetBrains Mono typefaces used under their respective open font licenses via Google Fonts.",
+    "Boot sequence optimized down from 'way too long' to 'blink and you'll miss it.'",
+    "Uru chatbot personality: entirely local, entirely undocumented.",
+    "This software is provided 'as is,' running on a 2011 iMac that has earned a rest.",
+    "No cathode ray tubes were harmed in the making of the Oldskool theme.",
+    "Any resemblance to real operating systems, living or in beta, is purely coincidental.",
+    "Melon Inc. name and mark used with the full enthusiastic consent of the author, who also owns Melon Inc.",
+    "Reproduction of this credits screen is encouraged, actually — it's just an Easter egg."
+  ];
+  document.getElementById('legalBlock').textContent = legalLines.join('\n\n');
+
+  function doExit(){
+    try{ window.parent.postMessage({ type:'aperture-exit-credits' }, '*'); }catch(e){}
+    try{ window.close(); }catch(e){}
+  }
+  document.getElementById('exitBtn').addEventListener('click', doExit);
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') doExit(); });
+</script>
+</body>
+</html>
